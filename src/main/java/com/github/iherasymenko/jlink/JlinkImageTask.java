@@ -60,6 +60,10 @@ public abstract class JlinkImageTask extends DefaultTask {
 
     @Input
     @Optional
+    public abstract Property<Boolean> getBindServices();
+
+    @Input
+    @Optional
     public abstract Property<Integer> getCompress();
 
     @Input
@@ -117,6 +121,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getNoManPages().getOrElse(false)) {
             args.add("--no-man-pages");
+        }
+        if (getBindServices().getOrElse(false)) {
+            args.add("--bind-services");
         }
         if (getCompress().isPresent()) {
             args.addAll(List.of("--compress", getCompress().map(String::valueOf).get()));
