@@ -1,31 +1,29 @@
 plugins {
     id 'java-gradle-plugin'
-    id 'com.gradle.plugin-publish' version '0.12.0'
+    id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
-version = '0.1'
+version = '0.2-SNAPSHOT'
 group = 'com.github.iherasymenko.jlink'
 
 tasks.named('compileJava', JavaCompile).configure { task ->
-    task.options.release = 11
+    task.options.release.set(11)
 }
 
 tasks.named('compileTestJava', JavaCompile).configure {task ->
-    task.options.release = 15
+    task.options.release.set(21)
 }
 
 gradlePlugin {
+    website = 'https://github.com/iherasymenko/jlink-gradle-plugin'
+    vcsUrl = 'https://github.com/iherasymenko/jlink-gradle-plugin'
     plugins {
         jlink {
             displayName = 'jlink'
             id = 'com.github.iherasymenko.jlink'
             implementationClass = 'com.github.iherasymenko.jlink.JlinkPlugin'
+            description = 'This plugins adds jlink integration to your Gradle builds. As simple as that.'
+            tags.set(['java', 'jlink', 'jigsaw', 'modularity'])
         }
-    }
-    pluginBundle {
-        description = 'This plugins adds jlink integration to your Gradle builds. As simple as that.'
-        website = 'https://github.com/iherasymenko/jlink-gradle-plugin'
-        vcsUrl = 'https://github.com/iherasymenko/jlink-gradle-plugin'
-        tags = ['java', 'jlink', 'jigsaw', 'modularity']
     }
 }

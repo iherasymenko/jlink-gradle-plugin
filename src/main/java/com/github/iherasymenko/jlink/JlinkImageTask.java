@@ -76,7 +76,6 @@ public abstract class JlinkImageTask extends DefaultTask {
     protected DirectoryProperty getJavaHome() {
         File javaHome = getProviderFactory()
                 .systemProperty("java.home")
-                .forUseAtConfigurationTime()
                 .map(File::new)
                 .get();
         return getObjectFactory().directoryProperty().fileValue(javaHome);
