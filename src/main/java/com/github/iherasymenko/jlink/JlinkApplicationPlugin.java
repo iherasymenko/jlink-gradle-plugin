@@ -24,13 +24,14 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
         TaskContainer tasks = project.getTasks();
 
         JlinkApplicationPluginExtension jlinkApplication = project.getExtensions().create("jlinkApplication", JlinkApplicationPluginExtension.class);
+        jlinkApplication.getApplicationName().convention(project.provider(project::getName));
 
         plugins.withType(ApplicationPlugin.class, applicationPlugin -> {
             JavaApplication javaApplication = project.getExtensions().getByType(JavaApplication.class);
-            jlinkApplication.getApplicationDefaultJvmArgs().convention(javaApplication.getApplicationDefaultJvmArgs());
+            jlinkApplication.getApplicationDefaultJvmArgs().convention(project.provider(javaApplication::getApplicationDefaultJvmArgs));
+            jlinkApplication.getApplicationName().convention(project.provider(javaApplication::getApplicationName));
             jlinkApplication.getMainModule().convention(javaApplication.getMainModule());
             jlinkApplication.getMainClass().convention(javaApplication.getMainClass());
-            jlinkApplication.getApplicationName().convention(javaApplication.getApplicationName());
         });
 
         plugins.withType(JavaPlugin.class, javaPlugin -> {
