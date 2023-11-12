@@ -35,4 +35,7 @@ tasks.named('compileTestJava', JavaCompile).configure {task ->
 
 tasks.withType(Test).configureEach { task ->
     task.useJUnitPlatform()
+    task.testLogging {
+        events = ["passed", "skipped", "failed", "standardOut", "standardError"]
+    }
 }

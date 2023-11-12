@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class GradleBuild {
 
@@ -28,16 +30,29 @@ public final class GradleBuild {
         Files.writeString(projectDir.resolve("settings.gradle"), settingsFile);
         Files.writeString(projectDir.resolve("src/main/java/com/example/demo/DemoApplication.java"), mainClass);
         Files.writeString(projectDir.resolve("src/main/java/module-info.java"), moduleInfo);
+
+        List<String> args = new ArrayList<>(List.of(arguments));
+        String javaHomeOverrideVar = System.getenv("JAVA_HOME_OVERRIDE_VAR");
+        if (javaHomeOverrideVar != null) {
+            String javaHome = System.getenv("JAVA_HOME");
+            String javaHomeOverride = System.getenv(javaHomeOverrideVar);
+            if (javaHomeOverride == null) {
+                throw new AssertionError("No %s environment variable is set".formatted(javaHomeOverrideVar));
+            }
+            if (!javaHome.equals(javaHomeOverride)) {
+                args.add("-Dorg.gradle.java.home=" + javaHomeOverride);
+            }
+        }
         return GradleRunner.create()
                 .forwardOutput()
                 .withPluginClasspath()
                 .withProjectDir(projectDir.toFile())
-                .withArguments(arguments);
+                .withArguments(args);
     }
 
     public void tearDown() throws IOException {
         if (this.projectDir != null) {
-            Files.walkFileTree(this.projectDir, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(this.projectDir, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     Files.delete(file);
