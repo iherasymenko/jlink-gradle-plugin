@@ -21,7 +21,7 @@ gradlePlugin {
         jlink {
             displayName = 'jlink'
             id = 'com.github.iherasymenko.jlink'
-            implementationClass = 'com.github.iherasymenko.jlink.JlinkPlugin'
+            implementationClass = 'com.github.iherasymenko.jlink.JlinkApplicationPlugin'
             description = 'This plugins adds jlink integration to your Gradle builds. As simple as that.'
             tags.set(['java', 'jlink', 'jigsaw', 'modularity'])
         }

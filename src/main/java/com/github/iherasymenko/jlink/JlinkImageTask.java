@@ -64,7 +64,15 @@ public abstract class JlinkImageTask extends DefaultTask {
 
     @Input
     @Optional
-    public abstract Property<Integer> getCompress();
+    public abstract Property<String> getCompress();
+
+    @Input
+    @Optional
+    public abstract Property<Boolean> getVerbose();
+
+    @Input
+    @Optional
+    public abstract Property<Boolean> getStripDebug();
 
     @Input
     public abstract ListProperty<String> getJvmArgs();
@@ -110,6 +118,7 @@ public abstract class JlinkImageTask extends DefaultTask {
 
         var modulePath = Stream.concat(Stream.ofNullable(jmodsProvider.getOrNull()), modulePathEntries.stream())
                 .map(File::getAbsolutePath)
+                .sorted()
                 .collect(joining(File.pathSeparator));
 
         List<String> args = new ArrayList<>();
@@ -126,11 +135,17 @@ public abstract class JlinkImageTask extends DefaultTask {
             args.add("--bind-services");
         }
         if (getCompress().isPresent()) {
-            args.addAll(List.of("--compress", getCompress().map(String::valueOf).get()));
+            args.addAll(List.of("--compress", getCompress().get()));
+        }
+        if (getVerbose().getOrElse(false)) {
+            args.add("--verbose");
+        }
+        if (getStripDebug().getOrElse(false)) {
+            args.add("--strip-debug");
         }
         String jvmArgsLine = String.join(" ", getJvmArgs().get());
         if (!jvmArgsLine.isEmpty()) {
-            args.add("--add-options= " + jvmArgsLine);
+            args.add("--add-options=" + jvmArgsLine);
         }
         for (var entry : getLaunchers().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
@@ -142,7 +157,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         StringWriter stderr = new StringWriter();
         int exitCode = jlink.run(new PrintWriter(stdout), new PrintWriter(stderr), args.toArray(String[]::new));
         if (exitCode != 0) {
-            throw new GradleException("jlink failed with exit code: " + exitCode + "\n" + stdout.toString() + "\n" + stderr.toString());
+            throw new GradleException("jlink failed with exit code: " + exitCode + "\n" + stdout + "\n" + stderr);
         }
     }
 
