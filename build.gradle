@@ -7,6 +7,7 @@ version = '0.4'
 group = 'com.github.iherasymenko.jlink'
 
 dependencies {
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
