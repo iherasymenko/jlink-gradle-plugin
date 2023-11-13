@@ -1,23 +1,17 @@
 package com.github.iherasymenko.jlink.test;
 
-import com.github.iherasymenko.jlink.test.fixtures.GradleBuild;
+import com.github.iherasymenko.jlink.test.fixtures.Text;
 import org.gradle.testkit.runner.BuildResult;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-class SimpleFunctionalTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    final GradleBuild build = new GradleBuild();
-
-    @AfterEach
-    void tearDown() throws IOException {
-        build.tearDown();
-    }
+final class CustomJvmArgsFunctionalTest extends AbstractTestBase {
 
     @Test
-    void javaBaseOnly() throws IOException {
+    void can_add_jvm_args_to_the_image() throws IOException {
         build.buildFile = """
                 plugins {
                 	id 'application'
@@ -30,7 +24,7 @@ class SimpleFunctionalTest {
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
-                	applicationDefaultJvmArgs = ["-Xms128m", "-Xmx128m"]
+                	applicationDefaultJvmArgs = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
                 }
                                                 
                 """;
@@ -47,7 +41,8 @@ class SimpleFunctionalTest {
                 
                 public class DemoApplication {
                     public static void main(String[] args) {
-                       System.out.println("Hello, world!");
+                       System.out.println(System.getProperty("test_arg1"));
+                       System.out.println(System.getProperty("test_arg2"));
                     }
                 }
                 """;
@@ -56,8 +51,12 @@ class SimpleFunctionalTest {
                                                                                             
                 }
                 """;
-        BuildResult buildResult = build.runner("imageModules")
+        BuildResult buildResult = build.runner("imageRun")
                 .build();
+        String[] taskOutput = Text.linesBetweenTags(buildResult.getOutput(), "> Task :imageRun", "BUILD SUCCESSFUL");
+        assertEquals(2, taskOutput.length);
+        assertEquals("hello", taskOutput[0]);
+        assertEquals("world", taskOutput[1]);
     }
 
 }
