@@ -3,7 +3,6 @@ package com.github.iherasymenko.jlink.test;
 import com.github.iherasymenko.jlink.test.fixtures.Text;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import java.io.IOException;
 
@@ -11,12 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 final class ImageFunctionalTest extends AbstractTestBase {
 
-    boolean jdk12Requested() {
-        return System.getenv("JAVA_HOME_12_X64") != null;
-    }
-
     @Test
-    @DisabledIf("jdk12Requested")
     void can_add_jvm_args_to_the_image_via_application_extension() throws IOException {
         build.buildFile = """
                 plugins {
@@ -66,7 +60,6 @@ final class ImageFunctionalTest extends AbstractTestBase {
     }
 
     @Test
-    @DisabledIf("jdk12Requested")
     void can_add_jvm_args_to_the_image_via_jlink_application_extension() throws IOException {
         build.buildFile = """
                 plugins {
