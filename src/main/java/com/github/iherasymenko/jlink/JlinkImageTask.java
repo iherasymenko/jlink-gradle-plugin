@@ -145,7 +145,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         String jvmArgsLine = String.join(" ", getJvmArgs().get());
         if (!jvmArgsLine.isEmpty()) {
-            args.addAll(List.of("--add-options", jvmArgsLine));
+            args.add("--add-options=" + jvmArgsLine);
         }
         for (var entry : getLaunchers().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
