@@ -27,7 +27,7 @@ gradlePlugin {
 }
 
 tasks.named('compileJava', JavaCompile).configure { task ->
-    task.options.release.set(11)
+    task.options.release.set(17)
 }
 
 tasks.named('compileTestJava', JavaCompile).configure {task ->

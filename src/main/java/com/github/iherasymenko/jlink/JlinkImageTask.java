@@ -2,11 +2,9 @@ package com.github.iherasymenko.jlink;
 
 import static java.util.stream.Collectors.joining;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 import java.util.spi.ToolProvider;
 import java.util.stream.Stream;
 
@@ -14,7 +12,6 @@ import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileSystemOperations;
@@ -39,7 +36,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     @InputDirectory
     @Optional
     @PathSensitive(PathSensitivity.RELATIVE)
-    public abstract DirectoryProperty getJdkFolder();
+    public abstract DirectoryProperty getCrossTargetJdk();
 
     @Classpath
     public abstract Property<FileCollection> getModulePath();
@@ -103,20 +100,17 @@ public abstract class JlinkImageTask extends DefaultTask {
     protected abstract FileSystemOperations getFileSystemOperations();
 
     @TaskAction
-    public void execute() {
+    public void execute() throws IOException {
         var jlink = ToolProvider.findFirst("jlink")
                 .orElseThrow(() -> new GradleException("The JDK does not bundle jlink"));
-        getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
 
-        var jmodsProvider = getJdkFolder()
-                .dir("jmods")
-                .map(Directory::getAsFile);
+        getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
 
         var modulePathEntries = getModulePath()
                 .get()
                 .getFiles();
 
-        var modulePath = Stream.concat(Stream.ofNullable(jmodsProvider.getOrNull()), modulePathEntries.stream())
+        var modulePath = Stream.concat(Stream.ofNullable(resolveCrossTargetJmodsFolder()), modulePathEntries.stream())
                 .map(File::getAbsolutePath)
                 .sorted()
                 .collect(joining(File.pathSeparator));
@@ -159,6 +153,34 @@ public abstract class JlinkImageTask extends DefaultTask {
         if (exitCode != 0) {
             throw new GradleException("jlink failed with exit code: " + exitCode + "\n" + stdout + "\n" + stderr);
         }
+    }
+
+    private File resolveCrossTargetJmodsFolder() throws IOException {
+        if (!getCrossTargetJdk().isPresent()) {
+            return null;
+        }
+        Path directory = getCrossTargetJdk().get().getAsFile().toPath();
+        try (var walker = Files.walk(directory)) {
+            List<Path> releaseFiles = walker.filter(path -> path.getFileName().toString().equals("release"))
+                    .toList();
+            for (Path releaseFile : releaseFiles) {
+                try (InputStream is = Files.newInputStream(releaseFile)) {
+                    var props = new Properties();
+                    props.load(is);
+                    var javaVersion = props.getProperty("JAVA_VERSION");
+                    var osName = props.getProperty("OS_NAME");
+                    var osArch = props.getProperty("OS_ARCH");
+                    if (javaVersion != null) {
+                        Path jdkRoot = releaseFile.getParent();
+                        getLogger().debug("Resolved JDK {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
+                        return jdkRoot.resolve("jmods").toFile();
+                    }
+                } catch (Exception e) {
+                    getLogger().debug("Cannot read 'release' file", e);
+                }
+            }
+        }
+        throw new GradleException("Cannot find a valid 'release' file in " + directory + " or any of its subdirectories");
     }
 
 }
