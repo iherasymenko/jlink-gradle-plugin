@@ -164,6 +164,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         StringWriter stdout = new StringWriter();
         StringWriter stderr = new StringWriter();
+        getLogger().debug("jlink args: {}", args);
         int exitCode = jlink.run(new PrintWriter(stdout), new PrintWriter(stderr), args.toArray(String[]::new));
         if (exitCode != 0) {
             throw new GradleException("jlink failed with exit code: " + exitCode + "\n" + stdout + "\n" + stderr);
@@ -187,7 +188,7 @@ public abstract class JlinkImageTask extends DefaultTask {
                     var osArch = props.getProperty("OS_ARCH");
                     if (javaVersion != null) {
                         Path jdkRoot = releaseFile.getParent();
-                        getLogger().debug("Resolved JDK {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
+                        getLogger().debug("Resolved cross target JDK: {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
                         return jdkRoot.resolve("jmods").toFile();
                     }
                 } catch (Exception e) {

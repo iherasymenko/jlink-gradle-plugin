@@ -55,10 +55,7 @@ public abstract class ExtractJdkTask extends DefaultTask {
             throw new GradleException("Unsupported archive format: " + fileName);
         }
         getFileSystemOperations().delete(spec -> spec.delete(destPath));
-        getFileSystemOperations().copy(spec -> {
-            spec.from(tree);
-            spec.into(destPath);
-        });
+        getFileSystemOperations().copy(spec -> spec.from(tree).into(destPath));
     }
 
 }
