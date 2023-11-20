@@ -30,7 +30,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'application'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -79,7 +79,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'java'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -128,7 +128,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'java'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -177,7 +177,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'java'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -225,7 +225,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'application'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -274,7 +274,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'application'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
@@ -337,7 +337,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
         build.buildFile = """
                 plugins {
                 	id 'java'
-                	id 'io.github.iherasymenko.jlink-application'
+                	id 'com.github.iherasymenko.jlink'
                 }
                                 
                 group = 'com.example'
