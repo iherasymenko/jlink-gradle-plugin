@@ -25,6 +25,7 @@ import org.gradle.api.file.ArchiveOperations;
 import org.gradle.api.file.FileSystemLocation;
 import org.gradle.api.file.FileSystemOperations;
 import org.gradle.api.file.FileTree;
+import org.gradle.api.logging.Logging;
 import org.gradle.api.provider.Provider;
 import org.gradle.work.DisableCachingByDefault;
 
@@ -57,6 +58,7 @@ public abstract class ExtractJdkTransform implements TransformAction<TransformPa
         } else {
             throw new GradleException("Unsupported archive format: " + fileName);
         }
+        Logging.getLogger(ExtractJdkTransform.class).debug("Extracting {} to {}", fileName, destPath);
         getFileSystemOperations().sync(spec -> spec.from(tree).into(destPath));
     }
 

@@ -20,15 +20,15 @@ public class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 dependencyResolutionManagement {
                     repositories {
                         ivy {
-                            url = uri("https://cdn.azul.com/zulu/bin/")
+                            url = uri('https://cdn.azul.com/zulu/bin/')
                             patternLayout {
-                                artifact "[artifact].[ext]"
+                                artifact '[artifact].[ext]'
                             }
                             metadataSources {
                                 artifact()
                             }
                             content {
-                                includeGroup("com.azul.cdn")
+                                includeGroup 'com.azul.cdn'
                             }
                         }
                         mavenCentral()
