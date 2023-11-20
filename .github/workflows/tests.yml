@@ -2,7 +2,7 @@ name: Tests
 on: ["push", "pull_request"]
 jobs:
   test:
-    name: Test - JDK ${{ matrix.java }} on ${{ matrix.os }}
+    name: 'Test - JDK ${{ matrix.java }}/${{ matrix.os }}'
     strategy:
       fail-fast: false
       matrix:
@@ -30,5 +30,7 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         if: success() || failure()
         with:
-          check_name: 'Test Report - JDK ${{ matrix.java }} on ${{ matrix.os }}'
+          include_passed: true
+          detailed_summary: true
+          check_name: 'Test Report - JDK ${{ matrix.java }}/${{ matrix.os }}'
           report_paths: '**/build/test-results/test/TEST-*.xml'
