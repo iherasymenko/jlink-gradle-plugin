@@ -2,11 +2,11 @@ name: Tests
 on: ["push", "pull_request"]
 jobs:
   test:
-    name: Test with JDK ${{ matrix.java }} on ${{ matrix.os }}
+    name: Test - JDK ${{ matrix.java }} on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        java: ['17', '21']
+        java: ['11', '17', '21']
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
     runs-on: ubuntu-latest
     steps:
@@ -25,3 +25,10 @@ jobs:
         run: ./gradlew check
         env:
           JAVA_HOME_OVERRIDE_VAR: JAVA_HOME_${{ matrix.java }}_X64
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()
+        with:
+          check_name: 'Test Report - JDK ${{ matrix.java }} on ${{ matrix.os }}'
+          report_paths: '**/build/test-results/test/TEST-*.xml'

@@ -15,16 +15,6 @@
  */
 package com.github.iherasymenko.jlink;
 
-import static java.util.stream.Collectors.joining;
-
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.spi.ToolProvider;
-import java.util.stream.Stream;
-
-import javax.inject.Inject;
-
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.file.DirectoryProperty;
@@ -35,15 +25,20 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.ProviderFactory;
-import org.gradle.api.tasks.CacheableTask;
-import org.gradle.api.tasks.Classpath;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputDirectory;
-import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.PathSensitive;
-import org.gradle.api.tasks.PathSensitivity;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
+
+import javax.inject.Inject;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.spi.ToolProvider;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @CacheableTask
 public abstract class JlinkImageTask extends DefaultTask {
@@ -178,7 +173,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         Path directory = getCrossTargetJdk().get().getAsFile().toPath();
         try (var walker = Files.walk(directory)) {
             List<Path> releaseFiles = walker.filter(path -> path.getFileName().toString().equals("release"))
-                    .toList();
+                    .collect(Collectors.toList());
             for (Path releaseFile : releaseFiles) {
                 try (InputStream is = Files.newInputStream(releaseFile)) {
                     var props = new Properties();

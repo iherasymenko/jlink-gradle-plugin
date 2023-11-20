@@ -15,25 +15,28 @@
  */
 package com.github.iherasymenko.jlink;
 
-import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.file.*;
-import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.NonNullApi;
+import org.gradle.api.artifacts.transform.InputArtifact;
+import org.gradle.api.artifacts.transform.TransformAction;
+import org.gradle.api.artifacts.transform.TransformOutputs;
+import org.gradle.api.artifacts.transform.TransformParameters;
+import org.gradle.api.file.ArchiveOperations;
+import org.gradle.api.file.FileSystemLocation;
+import org.gradle.api.file.FileSystemOperations;
+import org.gradle.api.file.FileTree;
+import org.gradle.api.provider.Provider;
 import org.gradle.work.DisableCachingByDefault;
 
 import javax.inject.Inject;
 import java.io.File;
 
-@DisableCachingByDefault(because = "DownloadJdkTask is a cacheable task and its output is used as an input for this task")
-public abstract class ExtractJdkTask extends DefaultTask {
+@NonNullApi
+@DisableCachingByDefault(because = "Not worth caching")
+public abstract class ExtractJdkTransform implements TransformAction<TransformParameters.None> {
 
-    @InputFile
-    public abstract RegularFileProperty getJdkArchive();
-
-    @OutputDirectory
-    public abstract DirectoryProperty getOutputDirectory();
+    @InputArtifact
+    protected abstract Provider<FileSystemLocation> getInputArtifact();
 
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
@@ -41,11 +44,11 @@ public abstract class ExtractJdkTask extends DefaultTask {
     @Inject
     protected abstract ArchiveOperations getArchiveOperations();
 
-    @TaskAction
-    public void execute() {
-        File jdkArchive = getJdkArchive().get().getAsFile();
-        Directory destPath = getOutputDirectory().get();
+    @Override
+    public void transform(TransformOutputs outputs) {
+        File jdkArchive = getInputArtifact().get().getAsFile();
         String fileName = jdkArchive.getName();
+        File destPath = outputs.dir(fileName);
         FileTree tree;
         if (fileName.endsWith(".zip")) {
             tree = getArchiveOperations().zipTree(jdkArchive);
@@ -54,8 +57,7 @@ public abstract class ExtractJdkTask extends DefaultTask {
         } else {
             throw new GradleException("Unsupported archive format: " + fileName);
         }
-        getFileSystemOperations().delete(spec -> spec.delete(destPath));
-        getFileSystemOperations().copy(spec -> spec.from(tree).into(destPath));
+        getFileSystemOperations().sync(spec -> spec.from(tree).into(destPath));
     }
 
 }

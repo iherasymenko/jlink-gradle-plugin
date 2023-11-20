@@ -19,10 +19,10 @@ import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.NonNullApi;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.dsl.DependencyHandler;
+import org.gradle.api.attributes.Attribute;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.file.RegularFile;
-import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.plugins.*;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Exec;
@@ -31,7 +31,6 @@ import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.language.base.plugins.LifecycleBasePlugin;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -108,35 +107,13 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.setArgs(List.of("--list-modules"));
             });
 
+            DependencyHandler dependencies = project.getDependencies();
+            Attribute<Boolean> extractedArchive = registerExtractTransform(dependencies);
+
             jlinkImages.all(image -> {
-                String name = image.name;
-                String capitalizedName = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-
-                TaskProvider<DownloadJdkTask> downloadJdkTask = tasks.register("downloadJdk" + capitalizedName, DownloadJdkTask.class, task -> {
-                    Provider<String> fileName = image.getUrl()
-                            .map(uri -> new File(uri.getPath()).getName());
-
-                    Provider<RegularFile> outputFile = project.getLayout()
-                            .getBuildDirectory()
-                            .dir("jdks")
-                            .flatMap(it -> it.file(fileName));
-                    task.setDescription("Downloads the JDK for " + image.name);
-                    task.getUrl().convention(image.getUrl());
-                    task.getChecksum().convention(image.getChecksum());
-                    task.getChecksumAlgorithm().convention(image.getChecksumAlgorithm());
-                    task.getOutputFile().convention(outputFile);
-                });
-
-                TaskProvider<ExtractJdkTask> extractJdkTask = tasks.register("extractJdk" + capitalizedName, ExtractJdkTask.class, task -> {
-                    RegularFileProperty targetFile = downloadJdkTask.get().getOutputFile();
-                    Provider<Directory> outputDirectory = project.getLayout()
-                            .getBuildDirectory()
-                            .dir("jdks-extracted")
-                            .map(it -> it.dir(image.name));
-                    task.setDescription("Extracts the JDK for " + image.name);
-                    task.getJdkArchive().convention(targetFile);
-                    task.getOutputDirectory().convention(outputDirectory);
-                });
+                String capitalizedName = image.getCapitalizedName();
+                var conf = project.getConfigurations().create("jdkArchive" + capitalizedName, it -> it.getAttributes().attribute(extractedArchive, true));
+                dependencies.addProvider(conf.getName(), image.getDependencyClassifier());
 
                 TaskProvider<JlinkImageTask> crossTargetImage = tasks.register("image" + capitalizedName, JlinkImageTask.class, task -> {
                     Provider<Directory> outputFolder = project.getLayout()
@@ -146,12 +123,32 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
 
                     task.setDescription("Builds a jlink image using the JDK for " + image.name);
                     task.getOutputFolder().convention(outputFolder);
-                    task.getCrossTargetJdk().convention(extractJdkTask.get().getOutputDirectory());
+                    task.getCrossTargetJdk().convention(project.getLayout().dir(project.provider(() -> project.files(conf).getSingleFile())));
                     defaultImageTaskSettings.accept(task);
                 });
                 tasks.named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure(task -> task.dependsOn(crossTargetImage));
             });
         });
+    }
+
+    private static Attribute<Boolean> registerExtractTransform(DependencyHandler dependencies) {
+        Attribute<Boolean> extractedArchive = Attribute.of("extracted", Boolean.class);
+        Attribute<String> artifactType = Attribute.of("artifactType", String.class);
+
+        dependencies.getArtifactTypes().maybeCreate("zip").getAttributes().attribute(extractedArchive, false);
+        dependencies.getArtifactTypes().maybeCreate("tar.gz").getAttributes().attribute(extractedArchive, false);
+
+        dependencies.registerTransform(ExtractJdkTransform.class, transform -> {
+            transform.getFrom().attribute(artifactType, "zip").attribute(extractedArchive, false);
+            transform.getTo().attribute(artifactType, "zip").attribute(extractedArchive, true);
+        });
+
+        dependencies.registerTransform(ExtractJdkTransform.class, transform -> {
+            transform.getFrom().attribute(artifactType, "tar.gz").attribute(extractedArchive, false);
+            transform.getTo().attribute(artifactType, "tar.gz").attribute(extractedArchive, true);
+        });
+
+        return extractedArchive;
     }
 
 }
