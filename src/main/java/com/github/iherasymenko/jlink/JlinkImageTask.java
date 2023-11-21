@@ -20,21 +20,26 @@ import org.gradle.api.GradleException;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileSystemOperations;
-import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
-import org.gradle.api.provider.ProviderFactory;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.*;
+import org.gradle.jvm.toolchain.JavaLauncher;
+import org.gradle.jvm.toolchain.JavaToolchainService;
+import org.gradle.jvm.toolchain.JavaToolchainSpec;
+import org.gradle.process.ExecOperations;
 
 import javax.inject.Inject;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +47,18 @@ import static java.util.stream.Collectors.joining;
 
 @CacheableTask
 public abstract class JlinkImageTask extends DefaultTask {
+
+    public JlinkImageTask() {
+        JavaToolchainSpec toolchain = getProject()
+                .getExtensions()
+                .getByType(JavaPluginExtension.class)
+                .getToolchain();
+        Provider<JavaLauncher> defaultLauncher = getJavaToolchainService().launcherFor(toolchain);
+        getJavaLauncher().convention(defaultLauncher);
+    }
+
+    @Nested
+    public abstract Property<JavaLauncher> getJavaLauncher();
 
     @InputDirectory
     @Optional
@@ -90,32 +107,17 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract MapProperty<String, String> getLaunchers();
 
-    @InputDirectory
-    @PathSensitive(PathSensitivity.RELATIVE)
-    protected DirectoryProperty getJavaHome() {
-        File javaHome = getProviderFactory()
-                .systemProperty("java.home")
-                .map(File::new)
-                .get();
-        return getObjectFactory().directoryProperty().fileValue(javaHome);
-    }
-
-    @Inject
-    protected abstract ObjectFactory getObjectFactory();
-
-    @Inject
-    protected abstract ProviderFactory getProviderFactory();
-
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
+    @Inject
+    public abstract JavaToolchainService getJavaToolchainService();
+
+    @Inject
+    public abstract ExecOperations getExecOperations();
+
     @TaskAction
     public void execute() throws IOException {
-        var jlink = ToolProvider.findFirst("jlink")
-                .orElseThrow(() -> new GradleException("The JDK does not bundle jlink"));
-
-        getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
-
         var modulePathEntries = getModulePath()
                 .get()
                 .getFiles();
@@ -157,13 +159,14 @@ public abstract class JlinkImageTask extends DefaultTask {
         for (var plugin : getDisablePlugins().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
         }
-        StringWriter stdout = new StringWriter();
-        StringWriter stderr = new StringWriter();
-        getLogger().debug("jlink args: {}", args);
-        int exitCode = jlink.run(new PrintWriter(stdout), new PrintWriter(stderr), args.toArray(String[]::new));
-        if (exitCode != 0) {
-            throw new GradleException("jlink failed with exit code: " + exitCode + "\n" + stdout + "\n" + stderr);
-        }
+        File jlink = getJavaLauncher().get()
+                .getMetadata()
+                .getInstallationPath()
+                .file("bin/jlink")
+                .getAsFile();
+        getLogger().debug("jlink executable: {}, args: {}", jlink, args);
+        getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
+        getExecOperations().exec(spec-> spec.args(args).executable(jlink));
     }
 
     private File resolveCrossTargetJmodsFolder() throws IOException {

@@ -25,7 +25,7 @@ jobs:
       - name: Run tests
         run: ./gradlew check
         env:
-          JAVA_HOME_OVERRIDE_VAR: JAVA_HOME_${{ matrix.java }}_X64
+          TESTING_AGAINST_JDK: ${{ matrix.java }}
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4

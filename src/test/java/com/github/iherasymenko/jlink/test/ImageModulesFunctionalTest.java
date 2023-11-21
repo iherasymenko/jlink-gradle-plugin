@@ -59,6 +59,13 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                                 
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
                                 
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
@@ -89,6 +96,13 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                                 
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
                                 
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'

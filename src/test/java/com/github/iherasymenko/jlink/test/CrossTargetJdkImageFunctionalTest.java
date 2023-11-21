@@ -4,7 +4,6 @@ import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 
 import java.io.IOException;
 
@@ -13,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
 
     @Test
-    @EnabledIf("jdk21")
     public void can_create_image_with_a_cross_target_jdk() throws IOException {
         build.settingsFile = """
                 rootProject.name = 'demo'
@@ -43,6 +41,13 @@ public class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                                 
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(21)
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
                                 
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
@@ -95,11 +100,6 @@ public class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
         assertThat(build.projectDir.resolve("build/images/linuxX64/lib/libjava.so")).exists();
         assertThat(build.projectDir.resolve("build/images/windowsX64/bin/java.dll")).exists();
         assertThat(build.projectDir.resolve("build/images/macOsX64/lib/libjava.dylib")).exists();
-    }
-
-    boolean jdk21() {
-        return "JAVA_HOME_21_X64".equals(System.getenv("JAVA_HOME_OVERRIDE_VAR")) // see .github/workflows/test.yml
-               || System.getenv("GITHUB_ACTIONS") == null && Runtime.version().feature() == 21; // Running locally
     }
 
 }

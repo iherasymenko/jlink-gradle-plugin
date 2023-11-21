@@ -47,17 +47,6 @@ public final class GradleBuild {
         Files.writeString(projectDir.resolve("src/main/java/module-info.java"), moduleInfo);
 
         List<String> args = new ArrayList<>(List.of(arguments));
-        String javaHomeOverrideVar = System.getenv("JAVA_HOME_OVERRIDE_VAR");
-        if (javaHomeOverrideVar != null) {
-            String javaHome = System.getenv("JAVA_HOME");
-            String javaHomeOverride = System.getenv(javaHomeOverrideVar);
-            if (javaHomeOverride == null) {
-                throw new AssertionError("No %s environment variable is set".formatted(javaHomeOverrideVar));
-            }
-            if (!javaHome.equals(javaHomeOverride)) {
-                args.add("-Dorg.gradle.java.home=" + javaHomeOverride);
-            }
-        }
         return GradleRunner.create()
                 .forwardOutput()
                 .withPluginClasspath()
