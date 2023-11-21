@@ -29,7 +29,6 @@ import org.gradle.api.tasks.Exec;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
-import org.gradle.language.base.plugins.LifecycleBasePlugin;
 
 import java.util.List;
 import java.util.Map;
@@ -126,7 +125,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                     task.getCrossTargetJdk().convention(project.getLayout().dir(project.provider(() -> project.files(conf).getSingleFile())));
                     defaultImageTaskSettings.accept(task);
                 });
-                tasks.named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure(task -> task.dependsOn(crossTargetImage));
+                tasks.named(BasePlugin.ASSEMBLE_TASK_NAME).configure(task -> task.dependsOn(crossTargetImage));
             });
         });
     }
