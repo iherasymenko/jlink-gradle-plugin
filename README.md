@@ -1,7 +1,7 @@
 # Overview
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fiherasymenko%2Fjlink-gradle-plugin%2Fbadge&style=flat)](https://actions-badge.atrox.dev/iherasymenko/jlink-gradle-plugin/goto)
-![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.github.iherasymenko.jlink)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.github.iherasymenko.jlink)](https://plugins.gradle.org/plugin/com.github.iherasymenko.jlink)
 
 This plugin provides integration with the `jlink` tool. The plugin requires Gradle to be run with JDK 11+. The minimally supported Gradle version is 6.8.
 
@@ -14,7 +14,7 @@ The examples below assume the Gradle version is 8.4 or higher and are written in
 
 When applied together with `java` plugin, the plugin contributes the `image`, `imageRun`, and `imageModules` tasks to the project. 
 
-The image that is built by the `image` tasks is meant to be used for development purposes only as it depends on the local JDK.
+The image that is built by the `image` task is meant to be used for development purposes only as it depends on the local JDK.
 
 If you want to distribute your application, please refer to the "Cross Target Images" section of this document.
 
@@ -28,7 +28,7 @@ If used together with `application` plugin, the plugin will infer the `mainModul
 ```groovy
 plugins {
     id 'application'
-    id 'com.github.iherasymenko.jlink' version '0.4'
+    id 'com.github.iherasymenko.jlink' version '0.5'
 }
 
 application {
@@ -43,7 +43,7 @@ application {
 ```groovy
 plugins {
     id 'java'
-    id 'com.github.iherasymenko.jlink' version '0.4'
+    id 'com.github.iherasymenko.jlink' version '0.5'
 }
 
 jlinkApplication {
@@ -86,7 +86,7 @@ Below is an example of how to configure the plugin to use [Azul Zulu OpenJDK](ht
 ```groovy
 plugins {
     id 'application'
-    id 'com.github.iherasymenko.jlink' version '0.4'
+    id 'com.github.iherasymenko.jlink' version '0.5'
 }
 
 application {
