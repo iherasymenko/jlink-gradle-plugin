@@ -25,6 +25,7 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.*;
 import org.gradle.jvm.toolchain.JavaLauncher;
 import org.gradle.jvm.toolchain.JavaToolchainService;
@@ -37,9 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -118,11 +117,11 @@ public abstract class JlinkImageTask extends DefaultTask {
 
     @TaskAction
     public void execute() throws IOException {
-        var modulePathEntries = getModulePath()
+        Set<File> modulePathEntries = getModulePath()
                 .get()
                 .getFiles();
 
-        var modulePath = Stream.concat(Stream.ofNullable(resolveCrossTargetJmodsFolder()), modulePathEntries.stream())
+        String modulePath = Stream.concat(resolveCrossTargetJmodsFolder(), modulePathEntries.stream())
                 .map(File::getAbsolutePath)
                 .sorted()
                 .collect(joining(File.pathSeparator));
@@ -153,10 +152,10 @@ public abstract class JlinkImageTask extends DefaultTask {
         if (!jvmArgsLine.isEmpty()) {
             args.add("--add-options=" + jvmArgsLine);
         }
-        for (var entry : getLaunchers().get().entrySet()) {
+        for (Map.Entry<String, String> entry : getLaunchers().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
         }
-        for (var plugin : getDisablePlugins().get()) {
+        for (String plugin : getDisablePlugins().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
         }
         File jlink = getJavaLauncher().get()
@@ -169,25 +168,25 @@ public abstract class JlinkImageTask extends DefaultTask {
         getExecOperations().exec(spec-> spec.args(args).executable(jlink));
     }
 
-    private File resolveCrossTargetJmodsFolder() throws IOException {
+    private Stream<File> resolveCrossTargetJmodsFolder() throws IOException {
         if (!getCrossTargetJdk().isPresent()) {
-            return null;
+            return Stream.empty();
         }
         Path directory = getCrossTargetJdk().get().getAsFile().toPath();
-        try (var walker = Files.walk(directory)) {
+        try (Stream<Path> walker = Files.walk(directory)) {
             List<Path> releaseFiles = walker.filter(path -> path.getFileName().toString().equals("release"))
                     .collect(Collectors.toList());
             for (Path releaseFile : releaseFiles) {
                 try (InputStream is = Files.newInputStream(releaseFile)) {
-                    var props = new Properties();
+                    Properties props = new Properties();
                     props.load(is);
-                    var javaVersion = props.getProperty("JAVA_VERSION");
-                    var osName = props.getProperty("OS_NAME");
-                    var osArch = props.getProperty("OS_ARCH");
+                    String javaVersion = props.getProperty("JAVA_VERSION");
+                    String osName = props.getProperty("OS_NAME");
+                    String osArch = props.getProperty("OS_ARCH");
                     if (javaVersion != null) {
                         Path jdkRoot = releaseFile.getParent();
                         getLogger().debug("Resolved cross target JDK: {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
-                        return jdkRoot.resolve("jmods").toFile();
+                        return Stream.of(jdkRoot.resolve("jmods").toFile());
                     }
                 } catch (Exception e) {
                     getLogger().debug("Cannot read 'release' file", e);

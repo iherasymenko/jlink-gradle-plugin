@@ -19,6 +19,7 @@ import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.NonNullApi;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.dsl.DependencyHandler;
 import org.gradle.api.attributes.Attribute;
 import org.gradle.api.file.Directory;
@@ -111,7 +112,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
 
             jlinkImages.all(image -> {
                 String capitalizedName = image.getCapitalizedName();
-                var conf = project.getConfigurations().create("jdkArchive" + capitalizedName, it -> it.getAttributes().attribute(extractedArchive, true));
+                Configuration conf = project.getConfigurations().create("jdkArchive" + capitalizedName, it -> it.getAttributes().attribute(extractedArchive, true));
                 dependencies.addProvider(conf.getName(), image.getDependencyClassifier());
 
                 TaskProvider<JlinkImageTask> crossTargetImage = tasks.register("image" + capitalizedName, JlinkImageTask.class, task -> {

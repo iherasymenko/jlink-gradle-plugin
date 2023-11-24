@@ -5,10 +5,9 @@
 
 This plugin provides integration with the `jlink` tool. The plugin requires Gradle to be run with JDK 11+. The minimally supported Gradle version is 6.8.
 
-Your application has to be _fully_ modularized in order to be used with this plugin. The plugin _does not_ do any nasty tricks to
-fool `jlink` into working with non-modularized applications. 
+Your application has to be _fully_ modularized in order to be used with this plugin. The plugin _does not_ do any nasty tricks to fool `jlink` into working with non-modularized applications. 
 
-If you have third party dependencies that are not modularized, you may consider using [extra-java-module-info](https://github.com/gradlex-org/extra-java-module-info) plugin in order to elegantly add the `module-info.class` descriptors to those libraries. 
+If you have third party dependencies that are not modularized, you should consider using [extra-java-module-info](https://github.com/gradlex-org/extra-java-module-info) plugin in order to elegantly add the `module-info.class` descriptors to those libraries. 
 
 The examples below assume the Gradle version is 8.4 or higher and are written in Groovy DSL.
 
