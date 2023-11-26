@@ -80,6 +80,8 @@ class PluginsFunctionalTest extends AbstractTestBase {
         assertThat(build.projectDir.resolve("build/images/demo/lib/server/classes_nocoops.jsa")).doesNotExist();
         // --exclude-files is disabled by default
         assertThat(build.projectDir.resolve("build/images/demo/legal")).isNotEmptyDirectory();
+        // --exclude-jmod-section is disabled by default
+        assertThat(build.projectDir.resolve("build/images/demo/include")).isNotEmptyDirectory();
     }
 
     @Test

@@ -119,6 +119,9 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract ListProperty<String> getExcludeFiles();
 
+    @Input
+    public abstract ListProperty<String> getExcludeJmodSection();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -180,6 +183,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         List<String> excludeFilesPatterns = getExcludeFiles().get();
         if (!excludeFilesPatterns.isEmpty()) {
             args.addAll(List.of("--exclude-files", String.join(",", excludeFilesPatterns)));
+        }
+        for (String section : getExcludeJmodSection().get()) {
+            args.addAll(List.of("--exclude-jmod-section", section));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);

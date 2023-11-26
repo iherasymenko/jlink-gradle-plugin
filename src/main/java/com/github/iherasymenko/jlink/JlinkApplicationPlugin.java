@@ -78,6 +78,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getDedupLegalNoticesErrorIfNotSameContent().convention(jlinkApplication.getDedupLegalNoticesErrorIfNotSameContent());
                 task.getGenerateCdsArchive().convention(jlinkApplication.getGenerateCdsArchive());
                 task.getExcludeFiles().convention(jlinkApplication.getExcludeFiles());
+                task.getExcludeJmodSection().convention(jlinkApplication.getExcludeJmodSection());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {

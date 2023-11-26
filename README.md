@@ -66,6 +66,7 @@ jlinkApplication {
             "add-options" // Neutralizes applicationDefaultJvmArgs
     ]
     excludeFiles = ['/**/legal/**', '/**/man/**']
+    excludeJmodSection = ['man', 'headers']
 }
 
 ```
