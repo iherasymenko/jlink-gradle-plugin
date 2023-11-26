@@ -42,4 +42,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<Boolean> getVerbose();
 
+    public abstract Property<Boolean> getDedupLegalNoticesErrorIfNotSameContent();
+
 }

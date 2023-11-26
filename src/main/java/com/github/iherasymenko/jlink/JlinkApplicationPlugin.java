@@ -75,6 +75,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getNoManPages().convention(jlinkApplication.getNoManPages());
                 task.getStripDebug().convention(jlinkApplication.getStripDebug());
                 task.getVerbose().convention(jlinkApplication.getVerbose());
+                task.getDedupLegalNoticesErrorIfNotSameContent().convention(jlinkApplication.getDedupLegalNoticesErrorIfNotSameContent());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {

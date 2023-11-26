@@ -106,6 +106,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract MapProperty<String, String> getLaunchers();
 
+    @Input
+    @Optional
+    public abstract Property<Boolean> getDedupLegalNoticesErrorIfNotSameContent();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -147,6 +151,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getStripDebug().getOrElse(false)) {
             args.add("--strip-debug");
+        }
+        if (getDedupLegalNoticesErrorIfNotSameContent().getOrElse(false)) {
+            args.addAll(List.of("--dedup-legal-notices", "error-if-not-same-content"));
         }
         String jvmArgsLine = String.join(" ", getJvmArgs().get());
         if (!jvmArgsLine.isEmpty()) {
