@@ -27,6 +27,7 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.*;
+import org.gradle.jvm.toolchain.JavaInstallationMetadata;
 import org.gradle.jvm.toolchain.JavaLauncher;
 import org.gradle.jvm.toolchain.JavaToolchainService;
 import org.gradle.jvm.toolchain.JavaToolchainSpec;
@@ -39,6 +40,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -165,14 +167,32 @@ public abstract class JlinkImageTask extends DefaultTask {
         for (String plugin : getDisablePlugins().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
         }
-        File jlink = getJavaLauncher().get()
-                .getMetadata()
-                .getInstallationPath()
-                .file("bin/jlink")
-                .getAsFile();
-        getLogger().debug("jlink executable: {}, args: {}", jlink, args);
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
-        getExecOperations().exec(spec-> spec.args(args).executable(jlink));
+        invokeJlink(args);
+    }
+
+    private void invokeJlink(List<String> args) {
+        JavaInstallationMetadata javaInstallation = getJavaLauncher().get().getMetadata();
+
+        File currentJavaHome = new File(System.getProperty("java.home")).getAbsoluteFile();
+        File toolchainJavaHome = javaInstallation.getInstallationPath().getAsFile().getAbsoluteFile();
+
+        //TODO: Replace with javaInstallation.isCurrentJvm() when we drop support of Gradle versions < 8
+        if (currentJavaHome.equals(toolchainJavaHome)) {
+            ToolProvider jlink = ToolProvider.findFirst("jlink")
+                    .orElseThrow(() -> new GradleException("The JDK does not bundle jlink"));
+            getLogger().debug("Running jlink via the ToolProvider");
+            int errorCode = jlink.run(System.out, System.err, args.toArray(String[]::new));
+            if (errorCode != 0) {
+                throw new GradleException("jlink finished with non-zero exit value " + errorCode);
+            }
+        } else {
+            getLogger().debug("Running jlink via the binary");
+            File jlink = javaInstallation.getInstallationPath()
+                    .file("bin/jlink")
+                    .getAsFile();
+            getExecOperations().exec(spec-> spec.args(args).executable(jlink));
+        }
     }
 
     private Stream<File> resolveCrossTargetJmodsFolder() throws IOException {
