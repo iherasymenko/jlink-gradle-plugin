@@ -64,7 +64,8 @@ jlinkApplication {
     dedupLegalNoticesErrorIfNotSameContent = true
     disablePlugins = [
             "add-options" // Neutralizes applicationDefaultJvmArgs
-    ] 
+    ]
+    excludeFiles = ['/**/legal/**', '/**/man/**']
 }
 
 ```

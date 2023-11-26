@@ -77,6 +77,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getVerbose().convention(jlinkApplication.getVerbose());
                 task.getDedupLegalNoticesErrorIfNotSameContent().convention(jlinkApplication.getDedupLegalNoticesErrorIfNotSameContent());
                 task.getGenerateCdsArchive().convention(jlinkApplication.getGenerateCdsArchive());
+                task.getExcludeFiles().convention(jlinkApplication.getExcludeFiles());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {

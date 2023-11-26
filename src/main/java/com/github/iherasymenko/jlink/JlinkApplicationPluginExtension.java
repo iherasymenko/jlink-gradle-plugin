@@ -46,4 +46,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<Boolean> getGenerateCdsArchive();
 
+    public abstract ListProperty<String> getExcludeFiles();
+
 }

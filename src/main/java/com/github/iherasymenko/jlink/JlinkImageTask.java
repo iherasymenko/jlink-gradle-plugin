@@ -116,6 +116,9 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<Boolean> getGenerateCdsArchive();
 
+    @Input
+    public abstract ListProperty<String> getExcludeFiles();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -173,6 +176,10 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         for (String plugin : getDisablePlugins().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
+        }
+        List<String> excludeFilesPatterns = getExcludeFiles().get();
+        if (!excludeFilesPatterns.isEmpty()) {
+            args.addAll(List.of("--exclude-files", String.join(",", excludeFilesPatterns)));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);

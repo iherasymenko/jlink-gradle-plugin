@@ -78,6 +78,8 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 .doesNotContain("Created CDS archive successfully");
         assertThat(build.projectDir.resolve("build/images/demo/lib/server/classes.jsa")).doesNotExist();
         assertThat(build.projectDir.resolve("build/images/demo/lib/server/classes_nocoops.jsa")).doesNotExist();
+        // --exclude-files is disabled by default
+        assertThat(build.projectDir.resolve("build/images/demo/legal")).isNotEmptyDirectory();
     }
 
     @Test
