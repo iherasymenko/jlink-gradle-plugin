@@ -132,6 +132,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<Boolean> getStripJavaDebugAttributes();
 
+    @Input
+    @Optional
+    public abstract Property<Boolean> getStripNativeCommands();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -207,6 +211,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getStripJavaDebugAttributes().getOrElse(false)) {
             args.add("--strip-java-debug-attributes");
+        }
+        if (getStripNativeCommands().getOrElse(false)) {
+            args.add("--strip-native-commands");
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);

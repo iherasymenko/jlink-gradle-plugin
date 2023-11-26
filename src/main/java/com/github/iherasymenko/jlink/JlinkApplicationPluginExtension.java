@@ -56,4 +56,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<Boolean> getStripJavaDebugAttributes();
 
+    public abstract Property<Boolean> getStripNativeCommands();
+
 }

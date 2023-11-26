@@ -70,6 +70,7 @@ jlinkApplication {
     excludeResources = ['/**/com/example/demo/DemoApplication.class']
     includeLocales = ['en-CA']
     stripJavaDebugAttributes = true
+    stripNativeCommands = true
 }
 
 ```
