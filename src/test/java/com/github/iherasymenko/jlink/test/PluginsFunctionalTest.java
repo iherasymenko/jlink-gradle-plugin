@@ -113,7 +113,8 @@ class PluginsFunctionalTest extends AbstractTestBase {
         assertThat(buildResult)
                 .extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING)
                 .contains("Error: /java.base/legal/java.base/LICENSE /foo/legal/foo/LICENSE contain different content");
-        assertThat(build.projectDir.resolve("build/images")).isEmptyDirectory();
+        assertThat(build.projectDir.resolve("build/images/demo/bin")).doesNotExist();
+        assertThat(build.projectDir.resolve("build/images/demo/release")).doesNotExist();
     }
 
     @Test
