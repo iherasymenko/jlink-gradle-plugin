@@ -50,4 +50,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract ListProperty<String> getExcludeJmodSection();
 
+    public abstract ListProperty<String> getExcludeResources();
+
 }

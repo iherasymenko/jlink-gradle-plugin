@@ -79,6 +79,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getGenerateCdsArchive().convention(jlinkApplication.getGenerateCdsArchive());
                 task.getExcludeFiles().convention(jlinkApplication.getExcludeFiles());
                 task.getExcludeJmodSection().convention(jlinkApplication.getExcludeJmodSection());
+                task.getExcludeResources().convention(jlinkApplication.getExcludeResources());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {
