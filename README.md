@@ -55,7 +55,7 @@ jlinkApplication {
 
 ```groovy
 jlinkApplication {
-    applicationDefaultJvmArgs = ['-Xmx8G', '-Xms8G']
+    addOptions = ['-Xmx8G', '-Xms8G']
     compress = 'zip-9'
     noHeaderFiles = true
     noManPages = true
@@ -63,7 +63,7 @@ jlinkApplication {
     generateCdsArchive = true
     dedupLegalNoticesErrorIfNotSameContent = true
     disablePlugins = [
-            "add-options" // Neutralizes applicationDefaultJvmArgs
+            "add-options"
     ]
     excludeFiles = ['/**/legal/**', '/**/man/**']
     excludeJmodSection = ['man', 'headers']

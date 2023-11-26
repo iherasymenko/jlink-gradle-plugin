@@ -100,7 +100,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     public abstract Property<Boolean> getStripDebug();
 
     @Input
-    public abstract ListProperty<String> getJvmArgs();
+    public abstract ListProperty<String> getAddOptions();
 
     @Input
     public abstract ListProperty<String> getDisablePlugins();
@@ -170,9 +170,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         if (getGenerateCdsArchive().getOrElse(false)) {
             args.add("--generate-cds-archive");
         }
-        String jvmArgsLine = String.join(" ", getJvmArgs().get());
-        if (!jvmArgsLine.isEmpty()) {
-            args.add("--add-options=" + jvmArgsLine);
+        String addOptions = String.join(" ", getAddOptions().get());
+        if (!addOptions.isEmpty()) {
+            args.add("--add-options=" + addOptions);
         }
         for (Map.Entry<String, String> entry : getLaunchers().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
@@ -180,9 +180,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         for (String plugin : getDisablePlugins().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
         }
-        List<String> excludeFilesPatterns = getExcludeFiles().get();
+        String excludeFilesPatterns = String.join(",", getExcludeFiles().get());
         if (!excludeFilesPatterns.isEmpty()) {
-            args.addAll(List.of("--exclude-files", String.join(",", excludeFilesPatterns)));
+            args.addAll(List.of("--exclude-files", excludeFilesPatterns));
         }
         for (String section : getExcludeJmodSection().get()) {
             args.addAll(List.of("--exclude-jmod-section", section));

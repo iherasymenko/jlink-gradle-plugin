@@ -105,7 +105,7 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
-                	applicationDefaultJvmArgs = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
+                	addOptions = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
                 	disablePlugins = ["add-options"]
                 }
                 """;

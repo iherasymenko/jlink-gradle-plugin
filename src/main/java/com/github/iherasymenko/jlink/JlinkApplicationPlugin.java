@@ -53,7 +53,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
 
         plugins.withType(ApplicationPlugin.class, applicationPlugin -> {
             JavaApplication javaApplication = project.getExtensions().getByType(JavaApplication.class);
-            jlinkApplication.getApplicationDefaultJvmArgs().convention(project.provider(javaApplication::getApplicationDefaultJvmArgs));
+            jlinkApplication.getAddOptions().convention(project.provider(javaApplication::getApplicationDefaultJvmArgs));
             jlinkApplication.getApplicationName().convention(project.provider(javaApplication::getApplicationName));
             jlinkApplication.getMainModule().convention(javaApplication.getMainModule());
             jlinkApplication.getMainClass().convention(javaApplication.getMainClass());
@@ -65,7 +65,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getModulePath().convention(project.files(tasks.named(JavaPlugin.JAR_TASK_NAME), project.getConfigurations().named(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)));
 
                 task.getMainModule().convention(jlinkApplication.getMainModule());
-                task.getJvmArgs().convention(jlinkApplication.getApplicationDefaultJvmArgs());
+                task.getAddOptions().convention(jlinkApplication.getAddOptions());
 
                 task.getBindServices().convention(jlinkApplication.getBindServices());
                 task.getCompress().convention(jlinkApplication.getCompress());

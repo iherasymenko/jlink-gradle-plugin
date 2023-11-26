@@ -24,7 +24,7 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<String> getMainClass();
 
-    public abstract ListProperty<String> getApplicationDefaultJvmArgs();
+    public abstract ListProperty<String> getAddOptions();
 
     public abstract Property<String> getApplicationName();
 
