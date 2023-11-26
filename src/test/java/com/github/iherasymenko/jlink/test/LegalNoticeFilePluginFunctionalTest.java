@@ -27,7 +27,7 @@ import java.util.spi.ToolProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DedupLegalNoticesPluginFunctionalTest extends AbstractTestBase {
+class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
 
     @BeforeEach
     void setUp() throws IOException {
