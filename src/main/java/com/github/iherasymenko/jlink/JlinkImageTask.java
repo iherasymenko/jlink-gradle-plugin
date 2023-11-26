@@ -112,6 +112,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<Boolean> getDedupLegalNoticesErrorIfNotSameContent();
 
+    @Input
+    @Optional
+    public abstract Property<Boolean> getGenerateCdsArchive();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -156,6 +160,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getDedupLegalNoticesErrorIfNotSameContent().getOrElse(false)) {
             args.addAll(List.of("--dedup-legal-notices", "error-if-not-same-content"));
+        }
+        if (getGenerateCdsArchive().getOrElse(false)) {
+            args.add("--generate-cds-archive");
         }
         String jvmArgsLine = String.join(" ", getJvmArgs().get());
         if (!jvmArgsLine.isEmpty()) {

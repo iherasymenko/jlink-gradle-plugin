@@ -44,4 +44,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<Boolean> getDedupLegalNoticesErrorIfNotSameContent();
 
+    public abstract Property<Boolean> getGenerateCdsArchive();
+
 }

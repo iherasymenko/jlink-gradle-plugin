@@ -54,16 +54,17 @@ jlinkApplication {
 ## Optional configuration
 
 ```groovy
-
-application {
-    applicationDefaultJvmArgs = ['-Xmx8G', '-Xms8G']
-}
-
 jlinkApplication {
+    applicationDefaultJvmArgs = ['-Xmx8G', '-Xms8G']
     compress = 'zip-9'
     noHeaderFiles = true
     noManPages = true
     stripDebug = true
+    generateCdsArchive = true
+    dedupLegalNoticesErrorIfNotSameContent = true
+    disablePlugins = [
+            "add-options" // Neutralizes applicationDefaultJvmArgs
+    ] 
 }
 
 ```
