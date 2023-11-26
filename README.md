@@ -69,6 +69,7 @@ jlinkApplication {
     excludeJmodSection = ['man', 'headers']
     excludeResources = ['/**/com/example/demo/DemoApplication.class']
     includeLocales = ['en-CA']
+    stripJavaDebugAttributes = true
 }
 
 ```

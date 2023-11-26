@@ -54,4 +54,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract ListProperty<String> getIncludeLocales();
 
+    public abstract Property<Boolean> getStripJavaDebugAttributes();
+
 }

@@ -128,6 +128,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract ListProperty<String> getIncludeLocales();
 
+    @Input
+    @Optional
+    public abstract Property<Boolean> getStripJavaDebugAttributes();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -200,6 +204,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         String includeLocales = String.join(",", getIncludeLocales().get());
         if (!includeLocales.isEmpty()) {
             args.addAll(List.of("--include-locales", includeLocales));
+        }
+        if (getStripJavaDebugAttributes().getOrElse(false)) {
+            args.add("--strip-java-debug-attributes");
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);
