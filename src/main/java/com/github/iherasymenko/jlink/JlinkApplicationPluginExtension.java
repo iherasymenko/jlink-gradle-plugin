@@ -52,4 +52,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract ListProperty<String> getExcludeResources();
 
+    public abstract ListProperty<String> getIncludeLocales();
+
 }

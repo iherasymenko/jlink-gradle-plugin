@@ -125,6 +125,9 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract ListProperty<String> getExcludeResources();
 
+    @Input
+    public abstract ListProperty<String> getIncludeLocales();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -193,6 +196,10 @@ public abstract class JlinkImageTask extends DefaultTask {
         String excludeResources = String.join(",", getExcludeResources().get());
         if (!excludeResources.isEmpty()) {
             args.addAll(List.of("--exclude-resources", excludeResources));
+        }
+        String includeLocales = String.join(",", getIncludeLocales().get());
+        if (!includeLocales.isEmpty()) {
+            args.addAll(List.of("--include-locales", includeLocales));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);
