@@ -374,4 +374,71 @@ final class ImageFunctionalTest extends AbstractTestBase {
         );
     }
 
+    @Test
+    void can_add_an_additional_launcher() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+                                
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                	launcher = [
+                	    'jlink-in-disguise': 'jdk.jlink/jdk.tools.jimage.Main',
+                	    'jar-in-disguise': 'jdk.jartool/sun.tools.jar.Main'
+                	]
+                }
+                                                
+                """;
+        build.settingsFile = """
+                rootProject.name = 'really-cool-application'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+                       
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                    requires jdk.jartool;
+                    requires jdk.jlink;
+                }
+                """;
+        build.runner("image").build();
+
+        assertThat(build.projectDir).satisfiesAnyOf(
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/really-cool-application")).exists(),
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/really-cool-application.bat")).exists()
+        );
+        assertThat(build.projectDir).satisfiesAnyOf(
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/jlink-in-disguise")).exists(),
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/jlink-in-disguise.bat")).exists()
+        );
+        assertThat(build.projectDir).satisfiesAnyOf(
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/jar-in-disguise")).exists(),
+                path -> assertThat(path.resolve("build/images/really-cool-application/bin/jar-in-disguise.bat")).exists()
+        );
+    }
+
 }

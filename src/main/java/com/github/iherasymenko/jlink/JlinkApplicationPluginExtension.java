@@ -16,6 +16,7 @@
 package com.github.iherasymenko.jlink;
 
 import org.gradle.api.provider.ListProperty;
+import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 
 public abstract class JlinkApplicationPluginExtension {
@@ -57,5 +58,7 @@ public abstract class JlinkApplicationPluginExtension {
     public abstract Property<Boolean> getStripJavaDebugAttributes();
 
     public abstract Property<Boolean> getStripNativeCommands();
+
+    public abstract MapProperty<String, String> getLauncher();
 
 }

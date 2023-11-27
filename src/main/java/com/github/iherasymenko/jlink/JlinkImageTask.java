@@ -106,7 +106,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     public abstract ListProperty<String> getDisablePlugin();
 
     @Input
-    public abstract MapProperty<String, String> getLaunchers();
+    public abstract MapProperty<String, String> getLauncher();
 
     @Input
     @Optional
@@ -188,7 +188,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         if (!addOptions.isEmpty()) {
             args.add("--add-options=" + addOptions);
         }
-        for (Map.Entry<String, String> entry : getLaunchers().get().entrySet()) {
+        for (Map.Entry<String, String> entry : getLauncher().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
         }
         for (String plugin : getDisablePlugin().get()) {

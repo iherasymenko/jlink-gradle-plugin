@@ -63,7 +63,7 @@ jlinkApplication {
     generateCdsArchive = true
     dedupLegalNoticesErrorIfNotSameContent = true
     disablePlugin = [
-            "add-options"
+        "add-options"
     ]
     excludeFiles = ['/**/legal/**', '/**/man/**']
     excludeResources = ['/**/com/example/demo/DemoApplication.class']
@@ -71,6 +71,9 @@ jlinkApplication {
     stripJavaDebugAttributes = true
     stripNativeCommands = true
     addModules = ['java.net.http']
+    launcher = [
+        'another-demo-application': 'demo.main/com.example.demo.AnotherDemoApplication'
+    ]
 }
 
 ```

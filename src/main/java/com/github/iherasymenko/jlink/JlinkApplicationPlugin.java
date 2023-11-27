@@ -32,6 +32,7 @@ import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -70,12 +71,18 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                     out.addAll(addModules);
                     return out;
                 }));
+                Provider<Map<String, String>> mainLauncherProvider = project.provider(() -> Map.of(jlinkApplication.getApplicationName().get(), jlinkApplication.getMainModule().get() + "/" + jlinkApplication.getMainClass().get()));
+                task.getLauncher().convention(jlinkApplication.getLauncher().zip(mainLauncherProvider, (launcher, mainLauncher) -> {
+                    Map<String, String> out = new LinkedHashMap<>();
+                    out.putAll(mainLauncher);
+                    out.putAll(launcher);
+                    return out;
+                }));
                 task.getAddOptions().convention(jlinkApplication.getAddOptions());
 
                 task.getBindServices().convention(jlinkApplication.getBindServices());
                 task.getCompress().convention(jlinkApplication.getCompress());
                 task.getDisablePlugin().convention(jlinkApplication.getDisablePlugin());
-                task.getLaunchers().convention(project.provider(() -> Map.of(jlinkApplication.getApplicationName().get(), jlinkApplication.getMainModule().get() + "/" + jlinkApplication.getMainClass().get())));
                 task.getNoHeaderFiles().convention(jlinkApplication.getNoHeaderFiles());
                 task.getNoManPages().convention(jlinkApplication.getNoManPages());
                 task.getStripDebug().convention(jlinkApplication.getStripDebug());
