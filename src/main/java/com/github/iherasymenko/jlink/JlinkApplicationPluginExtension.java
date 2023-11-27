@@ -24,11 +24,13 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<String> getMainClass();
 
+    public abstract ListProperty<String> getAddModules();
+
     public abstract ListProperty<String> getAddOptions();
 
     public abstract Property<String> getApplicationName();
 
-    public abstract ListProperty<String> getDisablePlugins();
+    public abstract ListProperty<String> getDisablePlugin();
 
     public abstract Property<Boolean> getBindServices();
 

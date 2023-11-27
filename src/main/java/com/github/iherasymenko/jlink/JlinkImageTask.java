@@ -73,7 +73,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     public abstract DirectoryProperty getOutputFolder();
 
     @Input
-    public abstract Property<String> getMainModule();
+    public abstract ListProperty<String> getAddModules();
 
     @Input
     @Optional
@@ -103,7 +103,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     public abstract ListProperty<String> getAddOptions();
 
     @Input
-    public abstract ListProperty<String> getDisablePlugins();
+    public abstract ListProperty<String> getDisablePlugin();
 
     @Input
     public abstract MapProperty<String, String> getLaunchers();
@@ -156,7 +156,10 @@ public abstract class JlinkImageTask extends DefaultTask {
         List<String> args = new ArrayList<>();
         args.addAll(List.of("--module-path", modulePath));
         args.addAll(List.of("--output", getOutputFolder().get().toString()));
-        args.addAll(List.of("--add-modules", getMainModule().get()));
+        String addModules = String.join(",", getAddModules().get());
+        if (!addModules.isEmpty()) {
+            args.addAll(List.of("--add-modules", addModules));
+        }
         if (getNoHeaderFiles().getOrElse(false)) {
             args.add("--no-header-files");
         }
@@ -188,7 +191,7 @@ public abstract class JlinkImageTask extends DefaultTask {
         for (Map.Entry<String, String> entry : getLaunchers().get().entrySet()) {
             args.addAll(List.of("--launcher", entry.getKey() + "=" + entry.getValue()));
         }
-        for (String plugin : getDisablePlugins().get()) {
+        for (String plugin : getDisablePlugin().get()) {
             args.addAll(List.of("--disable-plugin", plugin));
         }
         String excludeFilesPatterns = String.join(",", getExcludeFiles().get());

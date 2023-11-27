@@ -87,6 +87,61 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
     }
 
     @Test
+    void can_add_an_additional_root_module() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'application'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+                                
+                application {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                }
+                
+                jlinkApplication {
+                    addModules = ['java.net.http']
+                }
+                
+                dependencies {
+                    implementation platform('org.slf4j:slf4j-bom:2.0.9')
+                    implementation 'com.zaxxer:HikariCP:5.1.0'
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                    requires com.zaxxer.hikari;
+                }
+                """;
+        BuildResult buildResult = build.runner("imageModules")
+                .build();
+        String[] taskOutput = Text.linesBetweenTags(buildResult.getOutput(), "> Task :imageModules", "BUILD SUCCESSFUL");
+        assertThat(taskOutput).hasSize(12);
+        assertThat(taskOutput[0]).isEqualTo("com.zaxxer.hikari@5.1.0");
+        assertThat(taskOutput[1]).isEqualTo("demo.main");
+        assertThat(taskOutput[2]).startsWith("java.base@");
+        assertThat(taskOutput[3]).startsWith("java.logging@");
+        assertThat(taskOutput[4]).startsWith("java.management@");
+        assertThat(taskOutput[5]).startsWith("java.naming@");
+        assertThat(taskOutput[6]).startsWith("java.net.http@");
+        assertThat(taskOutput[7]).startsWith("java.security.sasl@");
+        assertThat(taskOutput[8]).startsWith("java.sql@");
+        assertThat(taskOutput[9]).startsWith("java.transaction.xa@");
+        assertThat(taskOutput[10]).startsWith("java.xml@");
+        assertThat(taskOutput[11]).isEqualTo("org.slf4j@2.0.9");
+    }
+
+    @Test
     void can_list_modules_in_an_image_with_third_party_modules() throws IOException {
         build.buildFile = """
                 plugins {

@@ -31,6 +31,7 @@ import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -63,13 +64,17 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
             Consumer<JlinkImageTask> defaultImageTaskSettings = task -> {
                 task.setGroup(BasePlugin.BUILD_GROUP);
                 task.getModulePath().convention(project.files(tasks.named(JavaPlugin.JAR_TASK_NAME), project.getConfigurations().named(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)));
-
-                task.getMainModule().convention(jlinkApplication.getMainModule());
+                task.getAddModules().convention(jlinkApplication.getAddModules().zip(jlinkApplication.getMainModule(), (addModules, mainModule) -> {
+                    List<String> out = new ArrayList<>();
+                    out.add(mainModule);
+                    out.addAll(addModules);
+                    return out;
+                }));
                 task.getAddOptions().convention(jlinkApplication.getAddOptions());
 
                 task.getBindServices().convention(jlinkApplication.getBindServices());
                 task.getCompress().convention(jlinkApplication.getCompress());
-                task.getDisablePlugins().convention(jlinkApplication.getDisablePlugins());
+                task.getDisablePlugin().convention(jlinkApplication.getDisablePlugin());
                 task.getLaunchers().convention(project.provider(() -> Map.of(jlinkApplication.getApplicationName().get(), jlinkApplication.getMainModule().get() + "/" + jlinkApplication.getMainClass().get())));
                 task.getNoHeaderFiles().convention(jlinkApplication.getNoHeaderFiles());
                 task.getNoManPages().convention(jlinkApplication.getNoManPages());

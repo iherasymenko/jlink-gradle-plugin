@@ -62,7 +62,7 @@ jlinkApplication {
     stripDebug = true
     generateCdsArchive = true
     dedupLegalNoticesErrorIfNotSameContent = true
-    disablePlugins = [
+    disablePlugin = [
             "add-options"
     ]
     excludeFiles = ['/**/legal/**', '/**/man/**']
@@ -70,6 +70,7 @@ jlinkApplication {
     includeLocales = ['en-CA']
     stripJavaDebugAttributes = true
     stripNativeCommands = true
+    addModules = ['java.net.http']
 }
 
 ```

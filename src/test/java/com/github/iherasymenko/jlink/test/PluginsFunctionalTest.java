@@ -104,7 +104,7 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	addOptions = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
-                	disablePlugins = ["add-options"]
+                	disablePlugin = ["add-options"]
                 }
                 """;
         build.settingsFile = """
