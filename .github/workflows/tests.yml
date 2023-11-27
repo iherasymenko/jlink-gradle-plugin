@@ -8,7 +8,7 @@ jobs:
       matrix:
         java: ['11', '17', '21']
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
-    runs-on: ubuntu-latest
+    runs-on: '${{ matrix.os }}'
     steps:
       - uses: actions/checkout@v4
       - uses: gradle/wrapper-validation-action@v1
