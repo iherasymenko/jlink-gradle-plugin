@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public final class GradleBuild {
         Files.writeString(projectDir.resolve("src/main/java/module-info.java"), moduleInfo);
 
         List<String> args = new ArrayList<>(List.of(arguments));
+        args.add("--configuration-cache");
         return GradleRunner.create()
                 .withDebug(isDebug())
                 .forwardOutput()
@@ -64,6 +66,12 @@ public final class GradleBuild {
             Files.walkFileTree(this.projectDir, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    try {
+                        DosFileAttributeView dos = Files.getFileAttributeView(file, DosFileAttributeView.class);
+                        if (dos != null) {
+                            dos.setReadOnly(false);
+                        }
+                    } catch (IOException ignored) { }
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 }

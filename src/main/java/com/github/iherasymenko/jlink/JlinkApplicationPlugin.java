@@ -23,11 +23,8 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.dsl.DependencyHandler;
 import org.gradle.api.attributes.Attribute;
 import org.gradle.api.file.Directory;
-import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.plugins.*;
 import org.gradle.api.provider.Provider;
-import org.gradle.api.tasks.Exec;
-import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
@@ -104,27 +101,24 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                         .flatMap(it -> it.dir(jlinkApplication.getApplicationName()));
                 task.setGroup(BasePlugin.BUILD_GROUP);
                 task.setDescription("Builds a jlink image using the current JDK");
-                task.getOutputFolder().convention(outputFolder);
+                task.getOutput().convention(outputFolder);
                 defaultImageTaskSettings.accept(task);
             });
 
-            TaskProvider<JavaExec> imageRunTask = tasks.register("imageRun", JavaExec.class, task -> {
-                DirectoryProperty outputFolder = imageTask.get().getOutputFolder();
-                task.getInputs().dir(outputFolder);
+            TaskProvider<JlinkRunImageTask> imageRunTask = tasks.register("imageRun", JlinkRunImageTask.class, task -> {
                 task.setGroup(ApplicationPlugin.APPLICATION_GROUP);
                 task.setDescription("Runs the project as a JVM application bundled with jlink");
-                task.executable(outputFolder.file("bin/java").get());
+
+                task.getImageDirectory().convention(imageTask.flatMap(JlinkImageTask::getOutput));
                 task.getMainClass().convention(jlinkApplication.getMainClass());
                 task.getMainModule().convention(jlinkApplication.getMainModule());
             });
 
-            tasks.register("imageModules", Exec.class, task -> {
-                DirectoryProperty outputFolder = imageTask.get().getOutputFolder();
-                task.getInputs().dir(outputFolder);
+            tasks.register("imageModules", JlinkModulesImageTask.class, task -> {
                 task.setGroup(HelpTasksPlugin.HELP_GROUP);
                 task.setDescription("Displays modules of the project JVM application bundled with jlink");
-                task.executable(outputFolder.file("bin/java").get());
-                task.setArgs(List.of("--list-modules"));
+
+                task.getImageDirectory().convention(imageTask.flatMap(JlinkImageTask::getOutput));
             });
 
             DependencyHandler dependencies = project.getDependencies();
@@ -142,7 +136,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                             .map(it -> it.dir(image.name));
 
                     task.setDescription("Builds a jlink image using the JDK for " + image.name);
-                    task.getOutputFolder().convention(outputFolder);
+                    task.getOutput().convention(outputFolder);
                     task.getCrossTargetJdk().convention(project.getLayout().dir(project.provider(() -> project.files(conf).getSingleFile())));
                     defaultImageTaskSettings.accept(task);
                 });

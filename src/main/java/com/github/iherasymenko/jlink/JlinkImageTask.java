@@ -20,6 +20,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileSystemOperations;
+import org.gradle.api.file.RegularFile;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
@@ -27,7 +28,6 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.*;
-import org.gradle.jvm.toolchain.JavaInstallationMetadata;
 import org.gradle.jvm.toolchain.JavaLauncher;
 import org.gradle.jvm.toolchain.JavaToolchainService;
 import org.gradle.jvm.toolchain.JavaToolchainSpec;
@@ -40,7 +40,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -70,7 +69,7 @@ public abstract class JlinkImageTask extends DefaultTask {
     public abstract Property<FileCollection> getModulePath();
 
     @OutputDirectory
-    public abstract DirectoryProperty getOutputFolder();
+    public abstract DirectoryProperty getOutput();
 
     @Input
     public abstract ListProperty<String> getAddModules();
@@ -158,7 +157,7 @@ public abstract class JlinkImageTask extends DefaultTask {
 
         List<String> args = new ArrayList<>();
         args.addAll(List.of("--module-path", modulePath));
-        args.addAll(List.of("--output", getOutputFolder().get().toString()));
+        args.addAll(List.of("--output", getOutput().get().toString()));
         String addModules = String.join(",", getAddModules().get());
         if (!addModules.isEmpty()) {
             args.addAll(List.of("--add-modules", addModules));
@@ -219,32 +218,14 @@ public abstract class JlinkImageTask extends DefaultTask {
         if (!limitModules.isEmpty()) {
             args.addAll(List.of("--limit-modules", limitModules));
         }
-        getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
-        invokeJlink(args);
-    }
-
-    private void invokeJlink(List<String> args) {
-        JavaInstallationMetadata javaInstallation = getJavaLauncher().get().getMetadata();
-
-        File currentJavaHome = new File(System.getProperty("java.home")).getAbsoluteFile();
-        File toolchainJavaHome = javaInstallation.getInstallationPath().getAsFile().getAbsoluteFile();
-
-        //TODO: Replace with javaInstallation.isCurrentJvm() when we drop support of Gradle versions < 8
-        if (currentJavaHome.equals(toolchainJavaHome)) {
-            ToolProvider jlink = ToolProvider.findFirst("jlink")
-                    .orElseThrow(() -> new GradleException("The JDK does not bundle jlink"));
-            getLogger().debug("Running jlink via the ToolProvider");
-            int errorCode = jlink.run(System.out, System.err, args.toArray(String[]::new));
-            if (errorCode != 0) {
-                throw new GradleException("jlink finished with non-zero exit value " + errorCode);
-            }
-        } else {
-            getLogger().debug("Running jlink via the binary");
-            File jlink = javaInstallation.getInstallationPath()
-                    .file("bin/jlink")
-                    .getAsFile();
-            getExecOperations().exec(spec-> spec.args(args).executable(jlink));
-        }
+        getFileSystemOperations().delete(spec -> spec.delete(getOutput().get()));
+        RegularFile jlink = getJavaLauncher()
+                .get()
+                .getMetadata()
+                .getInstallationPath()
+                .dir("bin")
+                .file(Os.jlinkBinaryName());
+        getExecOperations().exec(spec -> spec.args(args).executable(jlink));
     }
 
     private Stream<File> resolveCrossTargetJmodsFolder() throws IOException {

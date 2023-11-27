@@ -44,7 +44,7 @@ class GenerateCdsArchivePluginFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-              
+                              
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -61,7 +61,7 @@ class GenerateCdsArchivePluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                
+                                
                 public class DemoApplication {
                     public static void main(String[] args) {
 
@@ -76,8 +76,14 @@ class GenerateCdsArchivePluginFunctionalTest extends AbstractTestBase {
 
         BuildResult buildResult = build.runner("image").build();
 
-        assertThat(build.projectDir.resolve("build/images/demo/lib/server/classes.jsa")).exists();
-        assertThat(build.projectDir.resolve("build/images/demo/lib/server/classes_nocoops.jsa")).exists();
+        assertThat(build.projectDir).satisfiesAnyOf(
+                path -> assertThat(path.resolve("build/images/demo/lib/server/classes.jsa")).exists(), // Linux, Mac OS
+                path -> assertThat(path.resolve("build/images/demo/bin/server/classes.jsa")).exists() // Windows
+        );
+        assertThat(build.projectDir).satisfiesAnyOf(
+                path -> assertThat(path.resolve("build/images/demo/lib/server/classes_nocoops.jsa")).exists(), // Linux, Mac OS
+                path -> assertThat(path.resolve("build/images/demo/bin/server/classes_nocoops.jsa")).exists() // Windows
+        );
         assertThat(buildResult)
                 .extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING)
                 .contains("Created CDS archive successfully");

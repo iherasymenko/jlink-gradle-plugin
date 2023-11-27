@@ -79,13 +79,12 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
 
         BuildResult buildResult = build.runner("imageRun").buildAndFail();
-        String stackTraceWithNoDebugInformation = """
-                	at java.base/java.lang.ClassLoader.loadLibrary(Unknown Source)
-                	at java.base/java.lang.Runtime.loadLibrary0(Unknown Source)
-                	at java.base/java.lang.Runtime.loadLibrary(Unknown Source)
-                	at demo.main/com.example.demo.DemoApplication.main(Unknown Source)
-                """;
-        assertThat(buildResult).extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING).contains(stackTraceWithNoDebugInformation);
+        assertThat(buildResult)
+                .extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING)
+                .contains("at java.base/java.lang.ClassLoader.loadLibrary(Unknown Source)")
+                .contains("at java.base/java.lang.Runtime.loadLibrary0(Unknown Source)")
+                .contains("at java.base/java.lang.Runtime.loadLibrary(Unknown Source)")
+                .contains("at demo.main/com.example.demo.DemoApplication.main(Unknown Source)");
     }
 
     @Test
@@ -136,13 +135,12 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
 
         BuildResult buildResult = build.runner("imageRun").buildAndFail();
-        String stackTraceWithNoDebugInformation = """
-                	at java.base/java.lang.ClassLoader.loadLibrary(Unknown Source)
-                	at java.base/java.lang.Runtime.loadLibrary0(Unknown Source)
-                	at java.base/java.lang.Runtime.loadLibrary(Unknown Source)
-                	at demo.main/com.example.demo.DemoApplication.main(Unknown Source)
-                """;
-        assertThat(buildResult).extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING).contains(stackTraceWithNoDebugInformation);
+
+        assertThat(buildResult).extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING)
+                .contains("at java.base/java.lang.ClassLoader.loadLibrary(Unknown Source)")
+                .contains("at java.base/java.lang.Runtime.loadLibrary0(Unknown Source)")
+                .contains("at java.base/java.lang.Runtime.loadLibrary(Unknown Source)")
+                .contains("at demo.main/com.example.demo.DemoApplication.main(Unknown Source)");
 
         // Verification that native binary does not contain debug information is skipped
     }

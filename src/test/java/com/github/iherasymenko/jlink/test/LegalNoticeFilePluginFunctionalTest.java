@@ -58,7 +58,7 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                
+                                
                 public class DemoApplication {
                     public static void main(String[] args) {
                        
@@ -82,7 +82,7 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                                 
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
-                
+                                
                 java {
                 	toolchain {
                 		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
@@ -98,16 +98,15 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 dependencies {
                     implementation files("libs/foo.jmod")
                 }
-                
+                                
                 jlinkApplication {
                     dedupLegalNoticesErrorIfNotSameContent = true
                 }
-                
-                // Gradle does not recognize *.jmod files as modules ¯\\_(ツ)_/¯
-                tasks.withType(JavaCompile).configureEach { task ->
-                    task.doFirst {
+                                
+                // Gradle does not recognize *.jmod files as modules
+                tasks.withType(JavaCompile).configureEach {
+                    doFirst { task ->
                         task.options.compilerArgs += ["--module-path", task.classpath.asPath]
-                        classpath = files()
                     }
                 }
                 """;
@@ -129,7 +128,7 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                                 
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
-                
+                                
                 java {
                 	toolchain {
                 		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
@@ -145,12 +144,11 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 dependencies {
                     implementation files("libs/foo.jmod")
                 }
-                
-                // Gradle does not recognize *.jmod files as modules ¯\\_(ツ)_/¯
-                tasks.withType(JavaCompile).configureEach { task ->
-                    task.doFirst {
+                                
+                // Gradle does not recognize *.jmod files as modules
+                tasks.withType(JavaCompile).configureEach {
+                    doFirst { task ->
                         task.options.compilerArgs += ["--module-path", task.classpath.asPath]
-                        classpath = files()
                     }
                 }
                 """;

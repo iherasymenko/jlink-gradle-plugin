@@ -30,10 +30,26 @@ tasks.named('compileJava', JavaCompile).configure { task ->
     task.options.release.set(11)
 }
 
-tasks.named('compileTestJava', JavaCompile).configure {task ->
+tasks.named('compileTestJava', JavaCompile).configure { task ->
     task.options.release.set(21)
 }
 
 tasks.withType(Test).configureEach { task ->
     task.useJUnitPlatform()
+    // Required to test configuration cache in tests when using withDebug()
+    // https://github.com/gradle/gradle/issues/22765#issuecomment-1339427241
+    task.doFirst { it ->
+        if (it.jvmArgs.find { arg -> arg.startsWith('-agentlib:jdwp=') }) {
+            it.jvmArgs += [
+                    "--add-opens",
+                    "java.base/java.util=ALL-UNNAMED",
+                    "--add-opens",
+                    "java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+                    "--add-opens",
+                    "java.base/java.lang.invoke=ALL-UNNAMED",
+                    "--add-opens",
+                    "java.base/java.net=ALL-UNNAMED",
+            ]
+        }
+    }
 }

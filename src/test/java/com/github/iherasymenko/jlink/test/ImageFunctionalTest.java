@@ -365,7 +365,6 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
-                .withDebug(true)
                 .build();
         assertThat(buildResult.getOutput()).contains("Overriden by `jlinkApplication` extension");
         assertThat(build.projectDir).satisfiesAnyOf(

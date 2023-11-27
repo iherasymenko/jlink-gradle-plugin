@@ -75,10 +75,13 @@ class ExcludeJmodSectionPluginFunctionalTest extends AbstractTestBase {
 
         if ("11".equals(System.getenv("TESTING_AGAINST_JDK"))) {
             assertThat(build.projectDir.resolve("build/images/demo/man"))
-                    .withFailMessage("JDK 11 is buggy anv man pages are not included in the image unless exclude-jmod-section plugin is disabled")
+                    .withFailMessage("JDK 11 is buggy and man pages are not included in the image unless exclude-jmod-section plugin is disabled")
                     .doesNotExist();
         } else {
-            assertThat(build.projectDir.resolve("build/images/demo/man")).exists();
+            assertThat(build.projectDir).satisfiesAnyOf(
+                    path -> assertThat(path.resolve("build/images/demo/man")).exists(),
+                    path -> assertThat(System.getProperty("os.name")).startsWith("Windows") // no man pages on Windows
+            );
         }
     }
 
