@@ -61,4 +61,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract MapProperty<String, String> getLauncher();
 
+    public abstract ListProperty<String> getLimitModules();
+
 }

@@ -16,6 +16,7 @@
 package com.github.iherasymenko.jlink.test;
 
 import com.github.iherasymenko.jlink.test.fixtures.Text;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,6 +140,50 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
         assertThat(taskOutput[9]).startsWith("java.transaction.xa@");
         assertThat(taskOutput[10]).startsWith("java.xml@");
         assertThat(taskOutput[11]).isEqualTo("org.slf4j@2.0.9");
+    }
+
+    @Test
+    void can_limit_module_universe() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'application'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+                                
+                application {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                }
+                
+                jlinkApplication {
+                    limitModules = ['com.zaxxer.hikari']
+                }
+                
+                dependencies {
+                    implementation platform('org.slf4j:slf4j-bom:2.0.9')
+                    implementation 'com.zaxxer:HikariCP:5.1.0'
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                    requires com.zaxxer.hikari;
+                }
+                """;
+        BuildResult buildResult = build.runner("image")
+                .buildAndFail();
+        assertThat(buildResult)
+                .extracting(BuildResult::getOutput, InstanceOfAssertFactories.STRING)
+                .containsPattern("Module (.*) not found, required by com\\.zaxxer\\.hikari");
     }
 
     @Test

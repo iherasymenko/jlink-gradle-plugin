@@ -74,6 +74,7 @@ jlinkApplication {
     launcher = [
         'another-demo-application': 'demo.main/com.example.demo.AnotherDemoApplication'
     ]
+    limitModules = ['com.zaxxer.hikari']
 }
 
 ```

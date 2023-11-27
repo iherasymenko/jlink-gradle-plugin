@@ -133,6 +133,9 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<Boolean> getStripNativeCommands();
 
+    @Input
+    public abstract ListProperty<String> getLimitModules();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -211,6 +214,10 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getStripNativeCommands().getOrElse(false)) {
             args.add("--strip-native-commands");
+        }
+        String limitModules = String.join(",", getLimitModules().get());
+        if (!limitModules.isEmpty()) {
+            args.addAll(List.of("--limit-modules", limitModules));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutputFolder().get()));
         invokeJlink(args);

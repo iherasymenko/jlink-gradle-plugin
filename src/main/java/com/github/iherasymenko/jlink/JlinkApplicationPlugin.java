@@ -94,6 +94,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getIncludeLocales().convention(jlinkApplication.getIncludeLocales());
                 task.getStripJavaDebugAttributes().convention(jlinkApplication.getStripJavaDebugAttributes());
                 task.getStripNativeCommands().convention(jlinkApplication.getStripNativeCommands());
+                task.getLimitModules().convention(jlinkApplication.getLimitModules());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {
