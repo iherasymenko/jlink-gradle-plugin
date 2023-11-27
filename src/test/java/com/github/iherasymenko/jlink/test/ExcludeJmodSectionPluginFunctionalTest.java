@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ExcludeJmodSectionPluginFunctionalTest extends AbstractTestBase {
 
     @Test
-    void can_exclude_jmod_sections() throws IOException {
+    void man_pages_and_header_files_should_exist_by_default() throws IOException {
         build.buildFile = """
                 plugins {
                 	id 'java'
@@ -44,7 +44,118 @@ class ExcludeJmodSectionPluginFunctionalTest extends AbstractTestBase {
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
-                    excludeJmodSection = ['man', 'headers']
+                }
+                """;
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                    requires java.sql;
+                }
+                """;
+
+        build.runner("image").build();
+
+        assertThat(build.projectDir.resolve("build/images/demo/include")).exists();
+
+        if ("11".equals(System.getenv("TESTING_AGAINST_JDK"))) {
+            assertThat(build.projectDir.resolve("build/images/demo/man"))
+                    .withFailMessage("JDK 11 is buggy anv man pages are not included in the image unless exclude-jmod-section plugin is disabled")
+                    .doesNotExist();
+        } else {
+            assertThat(build.projectDir.resolve("build/images/demo/man")).exists();
+        }
+    }
+
+    @Test
+    void can_exclude_man_pages() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+              
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                    noManPages = true
+                }
+                """;
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                    requires java.sql;
+                }
+                """;
+
+        build.runner("image").build();
+
+        assertThat(build.projectDir.resolve("build/images/demo/man")).doesNotExist();
+    }
+
+    @Test
+    void can_exclude_header_files() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+              
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                    noHeaderFiles = true
                 }
                 """;
         build.settingsFile = """
@@ -73,7 +184,6 @@ class ExcludeJmodSectionPluginFunctionalTest extends AbstractTestBase {
         build.runner("image").build();
 
         assertThat(build.projectDir.resolve("build/images/demo/include")).doesNotExist();
-        assertThat(build.projectDir.resolve("build/images/demo/man")).doesNotExist();
     }
 
 }

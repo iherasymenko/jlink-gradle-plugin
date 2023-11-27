@@ -55,8 +55,8 @@ public final class GradleBuild {
                 .withArguments(args);
     }
 
-    public void setUp() throws IOException {
-        this.projectDir = Files.createDirectories(Path.of("build/functional-tests/test" + System.currentTimeMillis()));
+    public void setUp(String methodName) throws IOException {
+        this.projectDir = Files.createDirectories(Path.of("build/functional-tests/" + methodName + System.currentTimeMillis()));
     }
 
     public void tearDown() throws IOException {

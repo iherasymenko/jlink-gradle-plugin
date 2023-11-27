@@ -78,7 +78,6 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getDedupLegalNoticesErrorIfNotSameContent().convention(jlinkApplication.getDedupLegalNoticesErrorIfNotSameContent());
                 task.getGenerateCdsArchive().convention(jlinkApplication.getGenerateCdsArchive());
                 task.getExcludeFiles().convention(jlinkApplication.getExcludeFiles());
-                task.getExcludeJmodSection().convention(jlinkApplication.getExcludeJmodSection());
                 task.getExcludeResources().convention(jlinkApplication.getExcludeResources());
                 task.getIncludeLocales().convention(jlinkApplication.getIncludeLocales());
                 task.getStripJavaDebugAttributes().convention(jlinkApplication.getStripJavaDebugAttributes());

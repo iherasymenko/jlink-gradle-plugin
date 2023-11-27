@@ -18,6 +18,7 @@ package com.github.iherasymenko.jlink.test;
 import com.github.iherasymenko.jlink.test.fixtures.GradleBuild;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
 import java.io.IOException;
 
@@ -25,8 +26,11 @@ abstract class AbstractTestBase {
     final GradleBuild build = new GradleBuild();
 
     @BeforeEach
-    final void buildSetUp() throws IOException {
-        build.setUp();
+    final void buildSetUp(TestInfo ti) throws IOException {
+        String methodName = ti.getTestMethod()
+                .orElseThrow(() -> new AssertionError("Test method should always be present"))
+                .getName();
+        build.setUp(methodName);
     }
 
     @AfterEach
