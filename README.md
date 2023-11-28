@@ -77,6 +77,9 @@ jlinkApplication {
     limitModules = ['com.zaxxer.hikari']
     vm = 'server'
     endian = 'little'
+    vendorVersion = 'My JRE version 99.9'
+    vendorBugUrl = 'https://github.com/iherasymenko/jlink-gradle-plugin/issues?q=label:bug'
+    vendorVmBugUrl = 'https://github.com/iherasymenko/jlink-gradle-plugin/issues?q=label:vmbug'
 }
 
 ```

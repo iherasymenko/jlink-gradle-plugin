@@ -94,6 +94,9 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getLimitModules().convention(jlinkApplication.getLimitModules());
                 task.getVm().convention(jlinkApplication.getVm());
                 task.getEndian().convention(jlinkApplication.getEndian());
+                task.getVendorBugUrl().convention(jlinkApplication.getVendorBugUrl());
+                task.getVendorVersion().convention(jlinkApplication.getVendorVersion());
+                task.getVendorVmBugUrl().convention(jlinkApplication.getVendorVmBugUrl());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {

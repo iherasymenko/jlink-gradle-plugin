@@ -143,6 +143,18 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<String> getEndian();
 
+    @Input
+    @Optional
+    public abstract Property<String> getVendorBugUrl();
+
+    @Input
+    @Optional
+    public abstract Property<String> getVendorVersion();
+
+    @Input
+    @Optional
+    public abstract Property<String> getVendorVmBugUrl();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -231,6 +243,15 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getEndian().isPresent()) {
             args.addAll(List.of("--endian", getEndian().get()));
+        }
+        if (getVendorBugUrl().isPresent()) {
+            args.addAll(List.of("--vendor-bug-url", getVendorBugUrl().get()));
+        }
+        if (getVendorVersion().isPresent()) {
+            args.addAll(List.of("--vendor-version", getVendorVersion().get()));
+        }
+        if (getVendorVmBugUrl().isPresent()) {
+            args.addAll(List.of("--vendor-vm-bug-url", getVendorVmBugUrl().get()));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutput().get()));
         RegularFile jlink = getJavaLauncher()

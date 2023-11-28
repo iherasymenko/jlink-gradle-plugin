@@ -67,4 +67,10 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<String> getEndian();
 
+    public abstract Property<String> getVendorBugUrl();
+
+    public abstract Property<String> getVendorVersion();
+
+    public abstract Property<String> getVendorVmBugUrl();
+
 }
