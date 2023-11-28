@@ -65,4 +65,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<String> getVm();
 
+    public abstract Property<String> getEndian();
+
 }

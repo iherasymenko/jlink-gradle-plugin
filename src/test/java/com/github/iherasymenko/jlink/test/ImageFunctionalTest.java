@@ -20,6 +20,8 @@ import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -438,6 +440,118 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 path -> assertThat(path.resolve("build/images/really-cool-application/bin/jar-in-disguise")).exists(),
                 path -> assertThat(path.resolve("build/images/really-cool-application/bin/jar-in-disguise.bat")).exists()
         );
+    }
+
+    @Test
+    void can_specify_byte_order_little_endian() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+                                
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                	endian = 'little'
+                }
+                                                
+                """;
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+                       
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+
+                }
+                """;
+
+        build.runner("image").build();
+
+        try (InputStream fis = Files.newInputStream(build.projectDir.resolve("build/images/demo/lib/modules"))) {
+            byte[] actual = fis.readNBytes(4);
+            assertThat(actual).isEqualTo(new byte[]{(byte) 0xDA, (byte) 0xDA, (byte) 0xFE, (byte) 0xCA});
+        }
+    }
+
+    @Test
+    void can_specify_byte_order_big_endian() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+                                
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                	endian = 'big'
+                }
+                                                
+                """;
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+                       
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+
+                }
+                """;
+
+        build.runner("image").build();
+
+        try (InputStream fis = Files.newInputStream(build.projectDir.resolve("build/images/demo/lib/modules"))) {
+            byte[] actual = fis.readNBytes(4);
+            assertThat(actual).isEqualTo(new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xDA, (byte) 0xDA});
+        }
     }
 
 }

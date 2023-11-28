@@ -139,6 +139,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<String> getVm();
 
+    @Input
+    @Optional
+    public abstract Property<String> getEndian();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -224,6 +228,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getVm().isPresent()) {
             args.addAll(List.of("--vm", getVm().get()));
+        }
+        if (getEndian().isPresent()) {
+            args.addAll(List.of("--endian", getEndian().get()));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutput().get()));
         RegularFile jlink = getJavaLauncher()

@@ -76,6 +76,7 @@ jlinkApplication {
     ]
     limitModules = ['com.zaxxer.hikari']
     vm = 'server'
+    endian = 'little'
 }
 
 ```

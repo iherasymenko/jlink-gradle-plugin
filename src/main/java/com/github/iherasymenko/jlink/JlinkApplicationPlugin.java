@@ -93,6 +93,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getStripNativeCommands().convention(jlinkApplication.getStripNativeCommands());
                 task.getLimitModules().convention(jlinkApplication.getLimitModules());
                 task.getVm().convention(jlinkApplication.getVm());
+                task.getEndian().convention(jlinkApplication.getEndian());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {
