@@ -25,7 +25,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "11|17", disabledReason = "Generate CDS Archive plugin was introduced in JDK 18")
-class GenerateCdsArchivePluginFunctionalTest extends AbstractTestBase {
+class CDSPluginFunctionalTest extends AbstractTestBase {
 
     @Test
     void can_generate_cds_archive() throws IOException {
