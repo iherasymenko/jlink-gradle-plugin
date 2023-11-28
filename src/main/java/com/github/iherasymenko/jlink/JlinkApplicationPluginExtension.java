@@ -63,4 +63,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract ListProperty<String> getLimitModules();
 
+    public abstract Property<String> getVm();
+
 }

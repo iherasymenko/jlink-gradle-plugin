@@ -135,6 +135,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Input
     public abstract ListProperty<String> getLimitModules();
 
+    @Input
+    @Optional
+    public abstract Property<String> getVm();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -217,6 +221,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         String limitModules = String.join(",", getLimitModules().get());
         if (!limitModules.isEmpty()) {
             args.addAll(List.of("--limit-modules", limitModules));
+        }
+        if (getVm().isPresent()) {
+            args.addAll(List.of("--vm", getVm().get()));
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutput().get()));
         RegularFile jlink = getJavaLauncher()

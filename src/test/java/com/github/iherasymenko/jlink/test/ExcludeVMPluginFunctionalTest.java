@@ -15,16 +15,17 @@
  */
 package com.github.iherasymenko.jlink.test;
 
+import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StripNativeCommandsPluginFunctionalTest extends AbstractTestBase {
+class ExcludeVMPluginFunctionalTest extends AbstractTestBase {
 
     @Test
-    void can_strip_native_commands() throws IOException {
+    void can_specify_target_vm_type() throws IOException {
         build.buildFile = """
                 plugins {
                 	id 'java'
@@ -44,7 +45,7 @@ class StripNativeCommandsPluginFunctionalTest extends AbstractTestBase {
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
-                    stripNativeCommands = true
+                    vm = 'server'
                 }
                 """;
         build.settingsFile = """
@@ -71,9 +72,58 @@ class StripNativeCommandsPluginFunctionalTest extends AbstractTestBase {
                 """;
 
         build.runner("image").build();
+    }
 
-        assertThat(build.projectDir.resolve("build/images/demo/bin/java")).doesNotExist();
-        assertThat(build.projectDir.resolve("build/images/demo/bin/java.exe")).doesNotExist();
+    @Test
+    void can_specify_target_vm_unsupported() throws IOException {
+        build.buildFile = """
+                plugins {
+                	id 'java'
+                	id 'com.github.iherasymenko.jlink'
+                }
+                                
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+              
+                jlinkApplication {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                    vm = 'minimal'
+                }
+                """;
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+                
+                }
+                """;
+
+        BuildResult buildResult = build.runner("image").buildAndFail();
+        assertThat(buildResult.getOutput())
+                .contains("Selected VM minimal doesn't exist");
     }
 
 }

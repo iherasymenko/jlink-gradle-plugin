@@ -92,6 +92,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getStripJavaDebugAttributes().convention(jlinkApplication.getStripJavaDebugAttributes());
                 task.getStripNativeCommands().convention(jlinkApplication.getStripNativeCommands());
                 task.getLimitModules().convention(jlinkApplication.getLimitModules());
+                task.getVm().convention(jlinkApplication.getVm());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {
