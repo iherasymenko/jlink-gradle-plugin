@@ -155,6 +155,10 @@ public abstract class JlinkImageTask extends DefaultTask {
     @Optional
     public abstract Property<String> getVendorVmBugUrl();
 
+    @Input
+    @Optional
+    public abstract Property<Boolean> getIgnoreSigningInformation();
+
     @Inject
     protected abstract FileSystemOperations getFileSystemOperations();
 
@@ -252,6 +256,9 @@ public abstract class JlinkImageTask extends DefaultTask {
         }
         if (getVendorVmBugUrl().isPresent()) {
             args.addAll(List.of("--vendor-vm-bug-url", getVendorVmBugUrl().get()));
+        }
+        if (getIgnoreSigningInformation().getOrElse(false)) {
+            args.add("--ignore-signing-information");
         }
         getFileSystemOperations().delete(spec -> spec.delete(getOutput().get()));
         RegularFile jlink = getJavaLauncher()

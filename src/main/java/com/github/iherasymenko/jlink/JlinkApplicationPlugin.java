@@ -97,6 +97,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 task.getVendorBugUrl().convention(jlinkApplication.getVendorBugUrl());
                 task.getVendorVersion().convention(jlinkApplication.getVendorVersion());
                 task.getVendorVmBugUrl().convention(jlinkApplication.getVendorVmBugUrl());
+                task.getIgnoreSigningInformation().convention(jlinkApplication.getIgnoreSigningInformation());
             };
 
             TaskProvider<JlinkImageTask> imageTask = tasks.register("image", JlinkImageTask.class, task -> {

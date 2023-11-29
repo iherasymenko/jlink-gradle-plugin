@@ -73,4 +73,6 @@ public abstract class JlinkApplicationPluginExtension {
 
     public abstract Property<String> getVendorVmBugUrl();
 
+    public abstract Property<Boolean> getIgnoreSigningInformation();
+
 }
