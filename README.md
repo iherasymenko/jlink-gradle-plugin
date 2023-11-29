@@ -27,7 +27,7 @@ If used together with `application` plugin, the plugin will infer the `mainModul
 ```groovy
 plugins {
     id 'application'
-    id 'com.github.iherasymenko.jlink' version '0.5'
+    id 'com.github.iherasymenko.jlink' version '0.6'
 }
 
 application {
@@ -42,7 +42,7 @@ application {
 ```groovy
 plugins {
     id 'java'
-    id 'com.github.iherasymenko.jlink' version '0.5'
+    id 'com.github.iherasymenko.jlink' version '0.6'
 }
 
 jlinkApplication {
@@ -101,7 +101,7 @@ Below is an example of how to configure the plugin to use [Azul Zulu OpenJDK](ht
 ```groovy
 plugins {
     id 'application'
-    id 'com.github.iherasymenko.jlink' version '0.5'
+    id 'com.github.iherasymenko.jlink' version '0.6'
 }
 
 application {
