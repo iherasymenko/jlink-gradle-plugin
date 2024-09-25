@@ -287,11 +287,11 @@ public abstract class JlinkImageTask extends DefaultTask {
                     String osArch = props.getProperty("OS_ARCH");
                     if (javaVersion != null) {
                         Path jdkRoot = releaseFile.getParent();
-                        getLogger().debug("Resolved cross target JDK: {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
+                        getLogger().info("Resolved cross target JDK: {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
                         return Stream.of(jdkRoot.resolve("jmods").toFile());
                     }
                 } catch (Exception e) {
-                    getLogger().debug("Cannot read 'release' file", e);
+                    getLogger().info("Cannot read 'release' file", e);
                 }
             }
         }
