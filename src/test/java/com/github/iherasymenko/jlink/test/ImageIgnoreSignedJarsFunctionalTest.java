@@ -108,7 +108,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -118,7 +118,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                              
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -138,7 +138,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
 
@@ -166,7 +166,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -176,7 +176,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                              
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -197,7 +197,7 @@ class ImageIgnoreSignedJarsFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
 

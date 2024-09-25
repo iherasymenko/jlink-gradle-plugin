@@ -33,7 +33,7 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -43,7 +43,7 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-              
+
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -89,7 +89,7 @@ class PluginsFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 

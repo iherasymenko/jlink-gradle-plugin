@@ -34,7 +34,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -44,13 +44,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	applicationDefaultJvmArgs = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
                 }
-                                                
+
                 """;
         build.settingsFile = """
                 rootProject.name = 'demo'
@@ -72,7 +72,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -90,7 +90,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -100,13 +100,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	addOptions = ["-Dtest_arg1=hello", "-Dtest_arg2=world"]
                 }
-                                                
+
                 """;
         build.settingsFile = """
                 rootProject.name = 'demo'
@@ -128,7 +128,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -146,7 +146,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -156,13 +156,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	applicationName = 'cool-app'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'my-project'
@@ -183,7 +183,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+                
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -202,7 +202,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -212,12 +212,12 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'really-cool-application'
@@ -238,7 +238,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+                
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -257,7 +257,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -267,13 +267,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	applicationName = 'my-app'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'my-project'
@@ -294,7 +294,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+                
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -313,7 +313,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -323,7 +323,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication$CoolApplication'
                 	mainModule = 'coolapplication.main'
@@ -335,7 +335,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	mainModule = 'demo.main'
                 	applicationName = 'my-app'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'my-project'
@@ -355,7 +355,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                            System.out.println("This is the cool app");
                         }
                     }
-                    
+                
                     public static void main(String[] args) {
                        System.out.println("Overriden by `jlinkApplication` extension");
                     }
@@ -363,7 +363,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+                
                 }
                 """;
         BuildResult buildResult = build.runner("imageRun")
@@ -382,7 +382,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -392,7 +392,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -401,7 +401,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	    'jar-in-disguise': 'jdk.jartool/sun.tools.jar.Main'
                 	]
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'really-cool-application'
@@ -416,7 +416,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 public class DemoApplication {
                     public static void main(String[] args) {
-                       
+                
                     }
                 }
                 """;
@@ -449,7 +449,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -459,13 +459,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	endian = 'little'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'demo'
@@ -480,7 +480,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 public class DemoApplication {
                     public static void main(String[] args) {
-                       
+                
                     }
                 }
                 """;
@@ -505,7 +505,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -515,13 +515,13 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 	endian = 'big'
                 }
-                                                
+                
                 """;
         build.settingsFile = """
                 rootProject.name = 'demo'
@@ -536,7 +536,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 public class DemoApplication {
                     public static void main(String[] args) {
-                       
+                
                     }
                 }
                 """;

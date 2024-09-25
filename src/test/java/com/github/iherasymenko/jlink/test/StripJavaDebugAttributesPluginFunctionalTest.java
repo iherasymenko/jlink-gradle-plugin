@@ -38,7 +38,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -48,7 +48,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                              
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -65,7 +65,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
                         Runtime.getRuntime().loadLibrary("nonexistentlib.dll");
@@ -74,7 +74,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                    
+                
                 }
                 """;
 
@@ -94,7 +94,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -104,7 +104,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                              
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -121,7 +121,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
                         Runtime.getRuntime().loadLibrary("nonexistentlib.dll");
@@ -130,7 +130,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                    
+                
                 }
                 """;
 
@@ -152,7 +152,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -162,7 +162,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                              
+                
                 jlinkApplication {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -178,7 +178,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
                         Runtime.getRuntime().loadLibrary("nonexistentlib.dll");
@@ -187,7 +187,7 @@ class StripJavaDebugAttributesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                    
+                
                 }
                 """;
 

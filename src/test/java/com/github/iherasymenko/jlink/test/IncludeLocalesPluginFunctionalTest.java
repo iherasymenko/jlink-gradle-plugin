@@ -33,7 +33,7 @@ class IncludeLocalesPluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -60,7 +60,7 @@ class IncludeLocalesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                               
+                
                 import java.util.Locale;
                 
                 public class DemoApplication {
@@ -92,7 +92,7 @@ class IncludeLocalesPluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -118,7 +118,7 @@ class IncludeLocalesPluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                               
+                
                 import java.util.Arrays;
                 import java.util.Locale;
                 import java.util.Comparator;

@@ -58,10 +58,10 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 """;
         build.mainClass = """
                 package com.example.demo;
-                                
+                
                 public class DemoApplication {
                     public static void main(String[] args) {
-                       
+                
                     }
                 }
                 """;
@@ -79,30 +79,30 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
-                                
+                
                 java {
                 	toolchain {
                 		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 }
-                               
+                
                 dependencies {
                     implementation files("libs/foo.jmod")
                 }
-                                
+                
                 jlinkApplication {
                     dedupLegalNoticesErrorIfNotSameContent = true
                 }
-                                
+                
                 // Gradle does not recognize *.jmod files as modules
                 tasks.withType(JavaCompile).configureEach {
                     doFirst { task ->
@@ -125,26 +125,26 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
-                                
+                
                 java {
                 	toolchain {
                 		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 }
-                               
+                
                 dependencies {
                     implementation files("libs/foo.jmod")
                 }
-                                
+                
                 // Gradle does not recognize *.jmod files as modules
                 tasks.withType(JavaCompile).configureEach {
                     doFirst { task ->

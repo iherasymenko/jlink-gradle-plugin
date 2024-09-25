@@ -32,7 +32,7 @@ class ExcludePluginFunctionalTest extends AbstractTestBase {
                 	id 'java'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
 
@@ -62,13 +62,13 @@ class ExcludePluginFunctionalTest extends AbstractTestBase {
                 
                 public class DemoApplication {
                     public static void main(String[] args) {
-                        
+
                     }
                 }
                 """;
         build.moduleInfo = """
                 module demo.main {
-                    
+    
                 }
                 """;
 

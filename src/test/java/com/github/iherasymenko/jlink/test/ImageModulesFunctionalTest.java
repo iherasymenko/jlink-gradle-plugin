@@ -57,7 +57,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -67,16 +67,16 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
                 }
-                                                
+                
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+                
                 }
                 """;
         BuildResult buildResult = build.runner("imageModules")
@@ -94,7 +94,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -104,7 +104,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -149,7 +149,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -159,7 +159,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -193,7 +193,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -203,7 +203,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'

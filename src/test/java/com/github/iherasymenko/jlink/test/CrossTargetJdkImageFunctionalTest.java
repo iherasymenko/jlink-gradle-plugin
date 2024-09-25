@@ -53,7 +53,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-                                
+
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -63,7 +63,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-                                
+
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -95,7 +95,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-                                                                                            
+
                 }
                 """;
 
