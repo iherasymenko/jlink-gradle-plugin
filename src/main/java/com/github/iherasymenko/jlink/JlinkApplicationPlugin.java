@@ -111,7 +111,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
                 defaultImageTaskSettings.accept(task);
             });
 
-            TaskProvider<JlinkRunImageTask> imageRunTask = tasks.register("imageRun", JlinkRunImageTask.class, task -> {
+            tasks.register("imageRun", JlinkRunImageTask.class, task -> {
                 task.setGroup(ApplicationPlugin.APPLICATION_GROUP);
                 task.setDescription("Runs the project as a JVM application bundled with jlink");
 
