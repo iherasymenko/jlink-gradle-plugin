@@ -84,7 +84,7 @@ jlinkApplication {
 
 ```
 
-# Cross Target Images
+# Cross-Target Images
 
 The plugin supports building images for multiple platforms. If you want to distribute your application, you have to be explicit 
 about the JDK you want to use as the base image. `jlink` supports building cross-platform images, but it requires the JDK to be of the same 
@@ -92,7 +92,7 @@ major version as `jlink`.
 
 The plugin provides the `jlinkImages` extension that allows you to specify the JDKs you want to use for building the images.
 
-The JDKs will be fetched from a repository (CDN) that you have to configure. 
+The JDKs will be fetched from a repository (CDN) that you have to configure. In order for the JDK to be used as a cross-target, it *must not* be built with the `--enable-linkable-runtime` flag. See https://openjdk.org/jeps/493 for more details. 
 
 Below is an example of how to configure the plugin to use [Azul Zulu OpenJDK](https://cdn.azul.com/zulu/bin/) public CDN as the repository.
 
