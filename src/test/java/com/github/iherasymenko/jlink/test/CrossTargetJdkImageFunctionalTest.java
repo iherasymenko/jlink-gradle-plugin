@@ -117,4 +117,80 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
         assertThat(build.projectDir.resolve("build/images/macOsX64/lib/libjava.dylib")).exists();
     }
 
+    @Test
+    public void can_not_create_image_with_a_cross_target_jdk_when_no_jmods_found() throws IOException {
+        build.settingsFile = """
+                rootProject.name = 'demo'
+                dependencyResolutionManagement {
+                    repositories {
+                        ivy {
+                            url = uri('https://github.com/adoptium/temurin24-binaries/releases/download/jdk-24.0.1%2B9/')
+                            patternLayout {
+                                artifact '[artifact].[ext]'
+                            }
+                            metadataSources {
+                                artifact()
+                            }
+                            content {
+                                includeGroup 'net.adoptium.temurin'
+                            }
+                        }
+                        mavenCentral()
+                    }
+                }
+                """;
+        build.buildFile = """
+                plugins {
+                	id 'application'
+                	id 'com.github.iherasymenko.jlink'
+                }
+
+                group = 'com.example'
+                version = '0.0.1-SNAPSHOT'
+                
+                java {
+                	toolchain {
+                		languageVersion = JavaLanguageVersion.of(21)
+                		vendor = JvmVendorSpec.AZUL
+                	}
+                }
+
+                application {
+                	mainClass = 'com.example.demo.DemoApplication'
+                	mainModule = 'demo.main'
+                }
+                
+                jlinkImages {
+                	linuxX64 {
+                		group = 'net.adoptium.temurin'
+                		jdkArchive = 'OpenJDK24U-jdk_x64_linux_hotspot_24.0.1_9.tar.gz'
+                	}
+                }
+                """;
+        build.mainClass = """
+                package com.example.demo;
+                
+                public class DemoApplication {
+                    public static void main(String[] args) {
+                       System.out.println("Hello, world!");
+                    }
+                }
+                """;
+        build.moduleInfo = """
+                module demo.main {
+
+                }
+                """;
+
+        BuildResult buildResult = build.runner("assemble")
+                .buildAndFail();
+
+        assertThat(buildResult.task(":imageLinuxX64"))
+                .extracting(BuildTask::getOutcome)
+                .isEqualTo(TaskOutcome.FAILED);
+
+        assertThat(buildResult.getOutput())
+                .contains("jmods directory is not found. Cross-linking is not available with the given distribution. See https://openjdk.org/jeps/493 for details.");
+    }
+
 }

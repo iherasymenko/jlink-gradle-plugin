@@ -288,9 +288,13 @@ public abstract class JlinkImageTask extends DefaultTask {
                     if (javaVersion != null) {
                         Path jdkRoot = releaseFile.getParent();
                         getLogger().info("Resolved cross target JDK: {}, {}/{} in {}", javaVersion, osName, osArch, jdkRoot);
-                        return Stream.of(jdkRoot.resolve("jmods").toFile());
+                        Path jmodsFolder = jdkRoot.resolve("jmods");
+                        if (!Files.exists(jmodsFolder)) {
+                            throw new GradleException("jmods directory is not found. Cross-linking is not available with the given distribution. See https://openjdk.org/jeps/493 for details.");
+                        }
+                        return Stream.of(jmodsFolder.toFile());
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     getLogger().info("Cannot read 'release' file", e);
                 }
             }
