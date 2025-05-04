@@ -18,6 +18,7 @@ package com.github.iherasymenko.jlink.test;
 import com.github.iherasymenko.jlink.test.fixtures.Text;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -499,6 +500,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "24", disabledReason = "Error: specified --endian BIG_ENDIAN does not match endianness of target platform linux-x64/windows-x64/macos-aarch64")
     void can_specify_byte_order_big_endian() throws IOException {
         build.buildFile = """
                 plugins {
