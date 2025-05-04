@@ -43,7 +43,7 @@ class VendorPropsPluginFunctionalTest extends AbstractTestBase {
                 }
                 
                 dependencies {
-                    implementation 'org.ow2.asm:asm-util:9.6'
+                    implementation 'org.ow2.asm:asm-util:9.8'
                 }
               
                 jlinkApplication {

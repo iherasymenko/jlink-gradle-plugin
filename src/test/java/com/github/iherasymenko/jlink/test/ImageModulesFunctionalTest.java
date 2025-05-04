@@ -20,6 +20,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import java.io.IOException;
 
@@ -143,6 +144,7 @@ final class ImageModulesFunctionalTest extends AbstractTestBase {
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "24", disabledReason = "A regression likely introduced by https://github.com/openjdk/jdk/commit/11cd639842b61952755ad83e88446c91237c19f5")
     void can_limit_module_universe() throws IOException {
         build.buildFile = """
                 plugins {
