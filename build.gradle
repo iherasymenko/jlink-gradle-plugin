@@ -1,14 +1,14 @@
 plugins {
     id 'java-gradle-plugin'
-    id 'com.gradle.plugin-publish' version '1.2.1'
+    id 'com.gradle.plugin-publish' version '2.1.1'
 }
 
 version = '0.7'
 group = 'com.github.iherasymenko.jlink'
 
 dependencies {
-    testImplementation 'org.assertj:assertj-core:3.27.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -21,17 +21,17 @@ gradlePlugin {
             id = 'com.github.iherasymenko.jlink'
             implementationClass = 'com.github.iherasymenko.jlink.JlinkApplicationPlugin'
             description = 'This plugins adds jlink integration to your Gradle builds. As simple as that.'
-            tags.set(['java', 'jlink', 'jigsaw', 'modularity'])
+            tags = ['java', 'jlink', 'jigsaw', 'modularity']
         }
     }
 }
 
 tasks.named('compileJava', JavaCompile).configure { task ->
-    task.options.release.set(11)
+    task.options.release.set(17)
 }
 
 tasks.named('compileTestJava', JavaCompile).configure { task ->
-    task.options.release.set(21)
+    task.options.release.set(25)
 }
 
 tasks.withType(Test).configureEach { task ->

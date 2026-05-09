@@ -41,7 +41,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -97,7 +97,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -153,7 +153,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -209,7 +209,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -264,7 +264,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -320,7 +320,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -389,7 +389,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -456,7 +456,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -500,7 +500,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
     }
 
     @Test
-    @DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "24", disabledReason = "Error: specified --endian BIG_ENDIAN does not match endianness of target platform linux-x64/windows-x64/macos-aarch64")
+    @DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "17|21", disabledReason = "jlink does not check if the platform allows the target endianness")
     void can_specify_byte_order_big_endian() throws IOException {
         build.buildFile = """
                 plugins {
@@ -513,7 +513,7 @@ final class ImageFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -548,12 +548,8 @@ final class ImageFunctionalTest extends AbstractTestBase {
                 }
                 """;
 
-        build.runner("image").build();
-
-        try (InputStream fis = Files.newInputStream(build.projectDir.resolve("build/images/demo/lib/modules"))) {
-            byte[] actual = fis.readNBytes(4);
-            assertThat(actual).isEqualTo(new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xDA, (byte) 0xDA});
-        }
+        BuildResult buildResult = build.runner("image").buildAndFail();
+        assertThat(buildResult.getOutput()).contains("specified --endian BIG_ENDIAN does not match endianness of target platform");
     }
 
 }

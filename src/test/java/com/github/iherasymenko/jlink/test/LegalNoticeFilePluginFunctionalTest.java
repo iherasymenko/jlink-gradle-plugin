@@ -85,7 +85,7 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
@@ -131,7 +131,7 @@ class LegalNoticeFilePluginFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }

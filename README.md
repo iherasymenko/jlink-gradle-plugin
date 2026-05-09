@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fiherasymenko%2Fjlink-gradle-plugin%2Fbadge&style=flat)](https://actions-badge.atrox.dev/iherasymenko/jlink-gradle-plugin/goto)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.github.iherasymenko.jlink)](https://plugins.gradle.org/plugin/com.github.iherasymenko.jlink)
 
-This plugin provides integration with the `jlink` tool. The plugin requires Gradle to be run with JDK 11+. The minimally supported Gradle version is 6.8.
+This plugin provides integration with the `jlink` tool. The plugin requires Gradle to be run with JDK 17+. The minimally supported Gradle version is 6.8.
 
 Your application has to be _fully_ modularized in order to be used with this plugin. The plugin _does not_ do any nasty tricks to fool `jlink` into working with non-modularized applications. 
 

@@ -27,16 +27,21 @@ import org.gradle.api.file.FileSystemOperations;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.provider.Provider;
+import org.gradle.api.tasks.Classpath;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.DisableCachingByDefault;
+import org.jspecify.annotations.NullMarked;
 
 import javax.inject.Inject;
 import java.io.File;
 
-@NonNullApi
+@NullMarked
 @DisableCachingByDefault(because = "Not worth caching")
 public abstract class ExtractJdkTransform implements TransformAction<TransformParameters.None> {
 
     @InputArtifact
+    @PathSensitive(PathSensitivity.NONE)
     protected abstract Provider<FileSystemLocation> getInputArtifact();
 
     @Inject
