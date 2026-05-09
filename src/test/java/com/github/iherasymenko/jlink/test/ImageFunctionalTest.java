@@ -19,7 +19,6 @@ import com.github.iherasymenko.jlink.test.fixtures.Text;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
-import org.junit.jupiter.api.condition.DisabledOnOs;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -445,7 +444,6 @@ final class ImageFunctionalTest extends AbstractTestBase {
     }
 
     @Test
-    @DisabledOnOs
     void can_specify_byte_order_little_endian() throws IOException {
         build.buildFile = """
                 plugins {
