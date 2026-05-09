@@ -37,13 +37,13 @@ class VendorPropsPluginFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
                 
                 dependencies {
-                    implementation 'org.ow2.asm:asm-util:9.8'
+                    implementation 'org.ow2.asm:asm-util:9.9.1'
                 }
               
                 jlinkApplication {

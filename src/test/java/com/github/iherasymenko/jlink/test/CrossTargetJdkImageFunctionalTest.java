@@ -59,7 +59,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(25)
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }

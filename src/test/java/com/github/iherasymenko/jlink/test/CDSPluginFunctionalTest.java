@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "11|17", disabledReason = "Generate CDS Archive plugin was introduced in JDK 18")
+@DisabledIfEnvironmentVariable(named = "TESTING_AGAINST_JDK", matches = "17", disabledReason = "Generate CDS Archive plugin was introduced in JDK 18")
 class CDSPluginFunctionalTest extends AbstractTestBase {
 
     @Test
@@ -40,7 +40,7 @@ class CDSPluginFunctionalTest extends AbstractTestBase {
 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '21'))
+                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
