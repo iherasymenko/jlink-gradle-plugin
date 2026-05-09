@@ -48,22 +48,30 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                     }
                 }
                 """;
+        String javaVersion = System.getenv().getOrDefault("TESTING_AGAINST_JDK", "25");
+        String jdkDistro = switch (javaVersion) {
+            case "17" -> "zulu17.66.19-ca-jdk17.0.19";
+            case "21" -> "zulu21.50.19-ca-jdk21.0.11";
+            case "25" -> "zulu25.34.17-ca-jdk25.0.3";
+            case "26" -> "zulu26.30.11-ca-jdk26.0.1";
+            default -> throw new AssertionError("Unknown java version: " + javaVersion);
+        };
         build.buildFile = """
                 plugins {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
                 java {
                 	toolchain {
-                		languageVersion = JavaLanguageVersion.of(System.getenv().getOrDefault('TESTING_AGAINST_JDK', '25'))
+                		languageVersion = JavaLanguageVersion.of($1%s)
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -72,18 +80,18 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 jlinkImages {
                 	linuxX64 {
                 		group = 'com.azul.cdn'
-                		jdkArchive = 'zulu21.30.15-ca-jdk21.0.1-linux_x64.zip'
+                		jdkArchive = '%2$s-linux_x64.zip'
                 	}
                 	windowsX64 {
                 		group = 'com.azul.cdn'
-                		jdkArchive = 'zulu21.30.15-ca-jdk21.0.1-win_x64.zip'
+                		jdkArchive = '%2$s-win_x64.zip'
                 	}
                 	macOsX64 {
                 		group = 'com.azul.cdn'
-                		jdkArchive = 'zulu21.30.15-ca-jdk21.0.1-macosx_x64.tar.gz'
+                		jdkArchive = '%2$s-macosx_x64.tar.gz'
                 	}
                 }
-                """;
+                """.formatted(javaVersion, jdkDistro);
         build.mainClass = """
                 package com.example.demo;
                 
@@ -95,7 +103,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-
+                
                 }
                 """;
 
@@ -144,7 +152,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 	id 'application'
                 	id 'com.github.iherasymenko.jlink'
                 }
-
+                
                 group = 'com.example'
                 version = '0.0.1-SNAPSHOT'
                 
@@ -154,7 +162,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 		vendor = JvmVendorSpec.AZUL
                 	}
                 }
-
+                
                 application {
                 	mainClass = 'com.example.demo.DemoApplication'
                 	mainModule = 'demo.main'
@@ -178,7 +186,7 @@ class CrossTargetJdkImageFunctionalTest extends AbstractTestBase {
                 """;
         build.moduleInfo = """
                 module demo.main {
-
+                
                 }
                 """;
 
