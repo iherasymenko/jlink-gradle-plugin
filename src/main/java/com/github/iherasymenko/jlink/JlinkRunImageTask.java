@@ -21,12 +21,15 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.UntrackedTask;
 import org.gradle.process.ExecOperations;
+import org.gradle.work.DisableCachingByDefault;
 
 import javax.inject.Inject;
 
 import static com.github.iherasymenko.jlink.Os.javaBinaryName;
 
+@DisableCachingByDefault(because = "Not worth caching")
 public abstract class JlinkRunImageTask extends DefaultTask {
 
     @InputDirectory

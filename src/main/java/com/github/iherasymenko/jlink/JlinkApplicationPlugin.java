@@ -16,7 +16,6 @@
 package com.github.iherasymenko.jlink;
 
 import org.gradle.api.NamedDomainObjectContainer;
-import org.gradle.api.NonNullApi;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -27,6 +26,7 @@ import org.gradle.api.plugins.*;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@NonNullApi
+@NullMarked
 @SuppressWarnings("unused")
 public class JlinkApplicationPlugin implements Plugin<Project> {
 
@@ -47,7 +47,7 @@ public class JlinkApplicationPlugin implements Plugin<Project> {
         JlinkApplicationPluginExtension jlinkApplication = project.getExtensions().create("jlinkApplication", JlinkApplicationPluginExtension.class);
         jlinkApplication.getApplicationName().convention(project.provider(project::getName));
 
-        NamedDomainObjectContainer<JlinkImage> jlinkImages = project.container(JlinkImage.class, name -> project.getObjects().newInstance(JlinkImage.class, name));
+        NamedDomainObjectContainer<JlinkImage> jlinkImages = project.getObjects().domainObjectContainer(JlinkImage.class, name -> project.getObjects().newInstance(JlinkImage.class, name));
         project.getExtensions().add("jlinkImages", jlinkImages);
 
         plugins.withType(ApplicationPlugin.class, applicationPlugin -> {
