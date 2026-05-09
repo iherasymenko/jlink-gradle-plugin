@@ -27,7 +27,7 @@ If used together with `application` plugin, the plugin will infer the `mainModul
 ```groovy
 plugins {
     id 'application'
-    id 'com.github.iherasymenko.jlink' version '0.8'
+    id 'com.github.iherasymenko.jlink' version '0.9'
 }
 
 application {
@@ -42,7 +42,7 @@ application {
 ```groovy
 plugins {
     id 'java'
-    id 'com.github.iherasymenko.jlink' version '0.8'
+    id 'com.github.iherasymenko.jlink' version '0.9'
 }
 
 jlinkApplication {

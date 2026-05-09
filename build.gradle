@@ -3,7 +3,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '2.1.1'
 }
 
-version = '0.8'
+version = '0.9'
 group = 'com.github.iherasymenko.jlink'
 
 dependencies {
@@ -22,6 +22,11 @@ gradlePlugin {
             implementationClass = 'com.github.iherasymenko.jlink.JlinkApplicationPlugin'
             description = 'This plugins adds jlink integration to your Gradle builds. As simple as that.'
             tags = ['java', 'jlink', 'jigsaw', 'modularity']
+            compatibility {
+                features {
+                    configurationCache = true // or false if the feature isn't supported
+                }
+            }
         }
     }
 }
